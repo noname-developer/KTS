@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.login.LoginActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/appbar_elevation">
+
+        <com.example.kts.CenteredTitleToolbar
+            android:id="@+id/toolbar_login"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?android:windowBackground"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:navigationIcon="@drawable/ic_logo" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.richpath.RichPathView
+        android:id="@+id/richPathView_progressAuth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_bar"
+        android:scaleType="fitXY"
+        app:vector="@drawable/ic_line" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager_login_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/richPathView_progressAuth"
+        android:layout_alignParentBottom="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_back"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:srcCompat="@drawable/ic_arrow_left"
+        app:tint="@color/blue"
+        app:backgroundTint="@android:color/white"
+        android:layout_margin="16dp"/>
+
+</RelativeLayout>

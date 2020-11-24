@@ -1,0 +1,3 @@
+include ':poishadow-all'
+include ':app'
+rootProject.name = "KTS"

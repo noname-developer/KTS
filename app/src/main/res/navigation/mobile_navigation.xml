@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/menu_home">
+
+    <fragment
+        android:id="@+id/menu_timetable"
+        android:name="com.example.kts.ui.timetable.TimetableFragment"
+        android:label="@string/menu_title_home"
+        tools:layout="@layout/fragment_timetable" />
+
+    <fragment
+        android:id="@+id/menu_home"
+        android:name="com.example.kts.ui.home.DashboardFragment"
+        android:label="@string/menu_title_timetable"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/menu_group"
+        android:name="com.example.kts.ui.group.GroupFragment"
+        android:label="@string/menu_title_group"
+        tools:layout="@layout/fragment_group" />
+    <fragment
+        android:id="@+id/menu_admin_panel"
+        android:name="com.example.kts.ui.adminPanel.AdminPanelFragment"
+        android:label="@string/menu_title_control_panel"
+        tools:layout="@layout/item_icon_content" >
+        <action
+            android:id="@+id/action_menu_admin_panel_to_timetableEditorFragment"
+            app:destination="@id/timetableEditorFragment" />
+        <action
+            android:id="@+id/action_menu_admin_panel_to_choiceOfGroupFragment"
+            app:destination="@id/choiceOfGroupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/timetableEditorFragment"
+        android:name="com.example.kts.ui.adminPanel.timtableEditor.TimetableEditorFragment"
+        android:label="fragment_timetable_editor"
+        tools:layout="@layout/fragment_timetable_editor" />
+    <fragment
+        android:id="@+id/choiceOfGroupFragment"
+        android:name="com.example.kts.ui.login.choiceOfGroup.ChoiceOfGroupFragment"
+        android:label="fragment_choice_of_group"
+        tools:layout="@layout/fragment_choice_of_group" >
+        <action
+            android:id="@+id/action_choiceOfGroupFragment_to_groupEditorFragment"
+            app:destination="@id/groupEditorFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/groupEditorFragment"
+        android:name="com.example.kts.ui.adminPanel.groupEditor.GroupEditorFragment"
+        android:label="fragment_group_editor"
+        tools:layout="@layout/fragment_group_editor" />
+</navigation>

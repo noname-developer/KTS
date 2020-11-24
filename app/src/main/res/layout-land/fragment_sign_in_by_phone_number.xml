@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".ui.login.signInByPhoneNumber.SignInByPhoneNumberFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:src="@drawable/ic_phone" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gilroy_semibold"
+            android:text="Почти все готово!"
+            android:textAlignment="center"
+            android:textSize="26sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Введите свой номер телефона"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|top"
+        android:layout_marginTop="28dp"
+        android:minHeight="126dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textinput_num"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="326dp"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true"
+            app:hintEnabled="false"
+            android:layout_marginTop="8dp"
+            app:startIconDrawable="@drawable/ic_local_phone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editText_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Напр. +7 123 456-78-90"
+                android:inputType="phone"
+                android:text="+7" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_getCode"
+            style="@style/CustomBtnFilled"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="36dp"
+            android:text="Получить код" />
+    </LinearLayout>
+
+</LinearLayout>
