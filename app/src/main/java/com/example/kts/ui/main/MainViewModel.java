@@ -33,7 +33,7 @@ public class MainViewModel extends AndroidViewModel {
     public void onScroll(boolean scrollVertically, int range, int height) {
         if (scrollVertically) {
             if (!appbarShadowVisibility.getValue())
-                appbarShadowVisibility.setValue(true);
+                appbarShadowVisibility.postValue(true);
         } else {
             if (range > height) {
                 if (!appbarExpand.getValue()) {
@@ -45,7 +45,7 @@ public class MainViewModel extends AndroidViewModel {
             } else {
                 appBarFlags.setValue(0);
             }
-            appbarShadowVisibility.setValue(false);
+            appbarShadowVisibility.postValue(false);
         }
     }
 

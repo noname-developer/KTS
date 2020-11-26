@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -72,7 +73,12 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
             appBarLayout.setExpanded(expanded);
         });
 
-        viewModel.appbarShadowVisibility.observe(this, visibility -> appBarLayout.setSelected(visibility));
+        viewModel.appbarShadowVisibility.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean visibility) {
+                appBarLayout.setSelected(visibility);
+            }
+        });
 
         viewModel.appBarFlags.observe(this, scrollFlags -> {
             toolbar.postDelayed(() -> {
@@ -86,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
             this.optionsMenuId = optionsMenuId;
             invalidateOptionsMenu();
         });
+        Toast.makeText(this, "elevation " + appBarLayout.getElevation() + " " + toolbar.getElevation(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

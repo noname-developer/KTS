@@ -5,11 +5,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.kts.R;
@@ -23,7 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class WeekCalendarView extends LinearLayout {
+public class WeekCalendarView extends CardView {
 
     public static int CENTRAL_ITEM_POSITION = 3;
     private final WeekPageAdapter adapter = new WeekPageAdapter();

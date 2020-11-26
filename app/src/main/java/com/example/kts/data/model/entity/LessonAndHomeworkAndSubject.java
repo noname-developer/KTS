@@ -1,9 +1,20 @@
 package com.example.kts.data.model.entity;
 
 import androidx.room.Embedded;
+import androidx.room.Ignore;
 import androidx.room.Relation;
 
 public class LessonAndHomeworkAndSubject {
+
+    @Ignore
+    public LessonAndHomeworkAndSubject(LessonEntity lessonEntity, Homework homework, Subject subject) {
+        this.lessonEntity = lessonEntity;
+        this.homework = homework;
+        this.subject = subject;
+    }
+
+    public LessonAndHomeworkAndSubject() {
+    }
 
     @Embedded
     private LessonEntity lessonEntity;
