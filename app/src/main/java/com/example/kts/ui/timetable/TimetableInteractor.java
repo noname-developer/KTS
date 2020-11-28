@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.kts.data.model.entity.LessonAndHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
 import com.example.kts.data.repository.LessonRepository;
 import com.example.kts.data.repository.SubjectRepository;
 import com.example.kts.utils.DateFormatUtils;
@@ -22,7 +22,7 @@ public class TimetableInteractor {
         subjectRepository = new SubjectRepository(application);
     }
 
-    public LiveData<List<LessonAndHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(Date date) {
+    public LiveData<List<LessonWithHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(Date date) {
         lessonRepository.getLessonLol();
         return lessonRepository.getLessonWithHomeWorkWithSubjectByDate(DateFormatUtils.convertDateToString(date, DateFormatUtils.YYYY_MM_DD));
     }

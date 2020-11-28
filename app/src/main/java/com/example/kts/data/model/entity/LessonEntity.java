@@ -1,7 +1,10 @@
 package com.example.kts.data.model.entity;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.util.Date;
@@ -19,6 +22,10 @@ public class LessonEntity extends BaseEntity {
     @TypeConverters(ListConverter.class)
     private List<String> teacherUserUuidList;
     private String groupUuid;
+    @NonNull
+    @PrimaryKey()
+    @ColumnInfo(name = "lessonUuid")
+    protected String uuid;
 
     @Ignore
     public LessonEntity(String uuid, long timestamp, int order, String date, String subjectUuid, String room) {

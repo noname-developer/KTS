@@ -25,7 +25,7 @@ public class UserAccountListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_group, container, false);
+        View root = inflater.inflate(R.layout.fragment_group_users, container, false);
         recyclerView = root.findViewById(R.id.recyclerview_users);
         adapter = new UserAdapter();
         adapter.setUserItemClickListener(position -> loginViewModel.onUserItemClick(adapter.getDate().get(position)));

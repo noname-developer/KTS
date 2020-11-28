@@ -4,25 +4,25 @@ import androidx.room.Embedded;
 import androidx.room.Ignore;
 import androidx.room.Relation;
 
-public class LessonAndHomeworkAndSubject {
+public class LessonWithHomeworkAndSubject {
 
     @Ignore
-    public LessonAndHomeworkAndSubject(LessonEntity lessonEntity, Homework homework, Subject subject) {
+    public LessonWithHomeworkAndSubject(LessonEntity lessonEntity, Homework homework, Subject subject) {
         this.lessonEntity = lessonEntity;
         this.homework = homework;
         this.subject = subject;
     }
 
-    public LessonAndHomeworkAndSubject() {
+    public LessonWithHomeworkAndSubject() {
     }
 
     @Embedded
     private LessonEntity lessonEntity;
 
-    @Relation(parentColumn = "homeworkUuid", entityColumn = "uuid")
+    @Relation(parentColumn = "homeworkUuid", entityColumn = "homeworkUuid")
     private Homework homework;
 
-    @Relation(parentColumn = "subjectUuid", entityColumn = "uuid")
+    @Relation(parentColumn = "subjectUuid", entityColumn = "subjectUuid")
     private Subject subject;
 
     public LessonEntity getLessonEntity() {

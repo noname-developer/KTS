@@ -104,10 +104,11 @@ public class GroupDoc {
     }
 
     public Group toGroup() {
-        Group group = new Group();
+        Group group = new Group(uuid, name, course, specialtyUuid, timestamp);
         group.setName(name);
         group.setCourse(course);
         group.setSpecialtyUuid(specialtyUuid);
+        group.setTimestamp(timestamp);
         group.setUuid(uuid);
         return group;
     }

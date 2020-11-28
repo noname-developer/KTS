@@ -9,7 +9,7 @@ import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.HomeworkDao;
 import com.example.kts.data.dao.LessonDao;
 import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonAndHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
 import com.example.kts.data.model.firestore.LessonsDoc;
 import com.example.kts.data.prefs.AppPreferences;
 import com.example.kts.data.prefs.GroupPreference;
@@ -84,7 +84,7 @@ public class LessonRepository {
         return hashLesson;
     }
 
-    public LiveData<List<LessonAndHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(String date) {
+    public LiveData<List<LessonWithHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(String date) {
         if (!registrationMap.containsKey(date)) {
             registrationMap.put(date, getLessonsByDateListener(date));
         }
@@ -146,7 +146,7 @@ public class LessonRepository {
         homeworkDao.updateHomeworkCompletion(checked ? 1 : 0);
     }
 
-    public Completable loadLessonsByTeacherUserUuid(String teacherUserUuid, Date startDate) {
+    public Completable loadLessonsByTeacherUserUuidAndStartDate(String teacherUserUuid, Date startDate) {
         return Completable.create(emitter -> db.collectionGroup("Lessons")
                 .whereArrayContains("teacherUsersUuid", teacherUserUuid)
                 .whereGreaterThanOrEqualTo("date", startDate)

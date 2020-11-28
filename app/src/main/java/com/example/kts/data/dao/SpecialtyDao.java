@@ -8,6 +8,6 @@ import com.example.kts.data.model.entity.Specialty;
 @Dao
 public interface SpecialtyDao extends BaseDao<Specialty> {
 
-    @Query("DELETE FROM specialties WHERE uuid NOT IN (:availableSpecialties)")
+    @Query("DELETE FROM specialties WHERE specialtyUuid NOT IN (:availableSpecialties)")
     void deleteMissing(String availableSpecialties);
 }

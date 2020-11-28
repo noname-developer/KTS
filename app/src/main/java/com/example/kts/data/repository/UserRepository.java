@@ -3,7 +3,6 @@ package com.example.kts.data.repository;
 import android.app.Application;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -12,12 +11,8 @@ import com.example.kts.data.dao.UserDao;
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.prefs.GroupPreference;
 import com.example.kts.data.prefs.UserPreference;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,6 +66,7 @@ public class UserRepository {
     }
 
     public LiveData<List<User>> getUsersByGroupUuid(String groupUuid) {
+        //todo check null and get group in fireStore
         return userDao.getUsersByGroupUuid(groupUuid);
     }
 
@@ -89,7 +85,7 @@ public class UserRepository {
         return userListByRoleRangeAndGroupUuid;
     }
 
-    public void saveUserPreference(@NotNull User user) {
+    public void loadUserPreference(@NotNull User user) {
         userPreference.setUuid(user.getUuid());
         userPreference.setFirstName(user.getFirstName());
         userPreference.setSecondName(user.getSecondName());

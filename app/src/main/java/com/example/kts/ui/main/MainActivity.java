@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavArgument;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -73,19 +74,12 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
             appBarLayout.setExpanded(expanded);
         });
 
-        viewModel.appbarShadowVisibility.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean visibility) {
-                appBarLayout.setSelected(visibility);
-            }
-        });
+        viewModel.appbarShadowVisibility.observe(this, visibility -> appBarLayout.setSelected(visibility));
 
-        viewModel.appBarFlags.observe(this, scrollFlags -> {
-            toolbar.postDelayed(() -> {
-                params.setScrollFlags(scrollFlags);
-                toolbar.setLayoutParams(params);
-            }, 400);
-        });
+        viewModel.appBarFlags.observe(this, scrollFlags -> toolbar.postDelayed(() -> {
+            params.setScrollFlags(scrollFlags);
+            toolbar.setLayoutParams(params);
+        }, 400));
 
         viewModel.currentMenuOptions.observe(this, optionsMenuId -> {
             Toast.makeText(this, "change menu", Toast.LENGTH_SHORT).show();

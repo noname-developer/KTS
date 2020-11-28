@@ -1,12 +1,10 @@
-package com.example.kts.ui.adminPanel.groupEditor;
+package com.example.kts.ui.group.subjects;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.SingleLiveData;
 import com.example.kts.RxBusSubjectTeacher;
@@ -16,7 +14,7 @@ import com.example.kts.data.repository.GroupRepository;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
-public class GroupEditorViewModel extends AndroidViewModel {
+public class GroupSubjectsViewModel extends AndroidViewModel {
 
     private final GroupRepository groupRepository;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -24,7 +22,7 @@ public class GroupEditorViewModel extends AndroidViewModel {
     public LiveData<GroupInfo> getGroupInfo;
     private int selectedSubjectTeacherPosition;
 
-    public GroupEditorViewModel(@NonNull Application application) {
+    public GroupSubjectsViewModel(@NonNull Application application) {
         super(application);
         groupRepository = new GroupRepository(application);
         compositeDisposable.add(RxBusSubjectTeacher.getInstance()
@@ -52,6 +50,9 @@ public class GroupEditorViewModel extends AndroidViewModel {
     }
 
     public void onGroupUuidReceived(String groupUuid) {
+        if (groupUuid == null || groupRepository.getGroupUuid().equals(groupUuid)) {
+            groupUuid = groupRepository.getGroupUuid();
+        }
         getGroupInfo = groupRepository.getGroupInfoByUuid(groupUuid);
     }
 }

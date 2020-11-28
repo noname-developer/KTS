@@ -13,15 +13,15 @@ import java.util.stream.Stream;
 @Dao
 public interface UserDao extends BaseDao<User> {
 
-    @Query("SELECT * FROM users WHERE groupUuid =:groupUuid ORDER BY secondName")
+    @Query("SELECT * FROM users WHERE userGroupUuid =:groupUuid ORDER BY secondName")
     LiveData<List<User>> getUsersByGroupUuid(String groupUuid);
 
-    @Query("SELECT EXISTS(SELECT * FROM users WHERE uuid = :uuid)")
+    @Query("SELECT EXISTS(SELECT * FROM users WHERE userUuid = :uuid)")
     boolean isExist(String uuid);
 
     @Query("DELETE FROM users WHERE role = 'TEACHER'")
     void clearTeachers();
 
-    @Query("DELETE FROM users WHERE groupUuid !=:groupUuid AND uuid NOT IN(:availableTeachers)")
+    @Query("DELETE FROM users WHERE userGroupUuid !=:groupUuid AND userGroupUuid NOT IN(:availableTeachers)")
     void deleteMissingTeachers(String availableTeachers, String groupUuid);
 }

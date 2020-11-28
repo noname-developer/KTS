@@ -1,4 +1,4 @@
-package com.example.kts.ui.adminPanel.groupEditor.choiceSubjectTeacher;
+package com.example.kts.ui.group.choiceSubjectTeacher;
 
 import android.app.Application;
 

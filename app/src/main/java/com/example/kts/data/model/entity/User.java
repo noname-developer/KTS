@@ -1,8 +1,13 @@
 package com.example.kts.data.model.entity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity(tableName = "users")
-public class User extends BaseEntity {
+public class User implements IBaseEntity {
 
     public static final String STUDENT = "STUDENT";
     public static final String DEPUTY_HEADMAN = "DEPUTY_HEADMAN";
@@ -18,8 +23,13 @@ public class User extends BaseEntity {
     public static final String TEACHER = "TEACHER";
     public static final String HEAD_TEACHER = "HEAD_TEACHER";
     public static final String ADMIN = "ADMIN";
+    @NonNull
+    @PrimaryKey()
+    @ColumnInfo(name = "userUuid")
+    protected String uuid;
     private String firstName;
     private String secondName;
+    @ColumnInfo(name = "userGroupUuid")
     private String groupUuid;
     private String role;
     private String phoneNum;
@@ -27,7 +37,7 @@ public class User extends BaseEntity {
     private int sex;
 
     @Ignore
-    public User(String uuid, String firstName, String secondName, String groupUuid, @role String role, String phoneNum, String photoUrl, int sex) {
+    public User(@NotNull String uuid, String firstName, String secondName, String groupUuid, @role String role, String phoneNum, String photoUrl, int sex) {
         this.uuid = uuid;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -141,6 +151,16 @@ public class User extends BaseEntity {
 
     public String getFullName() {
         return firstName + " " + secondName;
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Retention(RetentionPolicy.SOURCE)

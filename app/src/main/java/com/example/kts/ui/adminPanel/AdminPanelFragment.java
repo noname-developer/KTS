@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.internal.util.AppendOnlyLinkedArrayList;
 
+import static com.example.kts.data.prefs.GroupPreference.GROUP_UUID;
+
 public class AdminPanelFragment extends Fragment {
 
     private ItemPreferenceAdapter adapter;
@@ -32,7 +34,7 @@ public class AdminPanelFragment extends Fragment {
     private ChoiceOfGroupSharedViewModel choiceOfGroupSharedViewModel;
     private NavController navController;
     private RecyclerView recyclerView;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RxBusChoiceOfGroup rxBusChoiceOfGroup;
 
     @Override
@@ -59,7 +61,12 @@ public class AdminPanelFragment extends Fragment {
             rxBusChoiceOfGroup = RxBusChoiceOfGroup.getInstance();
             compositeDisposable.add(rxBusChoiceOfGroup.getSelectGroupEvent()
                     .filter((AppendOnlyLinkedArrayList.NonThrowingPredicate<Object>) o12 -> o12 != RxBusChoiceOfGroup.EMPTY)
-                    .subscribe(o1 -> navController.navigate(R.id.action_choiceOfGroupFragment_to_groupEditorFragment)));
+                    .map(String::valueOf)
+                    .subscribe(groupUuid -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(GROUP_UUID, groupUuid);
+                        navController.navigate(R.id.action_choiceOfGroupFragment_to_group_editor, bundle);
+                    }));
             navController.navigate(R.id.action_menu_admin_panel_to_choiceOfGroupFragment);
         });
         viewModel.openTimetableEditorFragment.observe(getViewLifecycleOwner(), (Observer<Object>) o ->

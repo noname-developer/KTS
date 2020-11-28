@@ -1,18 +1,25 @@
 package com.example.kts.data.model.entity;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "subjects")
-public class Subject extends BaseEntity {
+public class Subject implements IBaseEntity {
 
+    @NonNull
+    @PrimaryKey()
+    @ColumnInfo(name = "subjectUuid")
+    protected String uuid;
     private String name;
     private String iconUrl;
     private String colorName;
     private boolean def;
 
     @Ignore
-    public Subject(String uuid, String name, String iconUrl, String colorName) {
+    public Subject(@NonNull String uuid, String name, String iconUrl, String colorName) {
         this.uuid = uuid;
         this.name = name;
         this.iconUrl = iconUrl;
@@ -20,11 +27,6 @@ public class Subject extends BaseEntity {
     }
 
     public Subject() {
-    }
-
-    @Ignore
-    public Subject(String name) {
-        this.name = name;
     }
 
     public String getName() {
@@ -57,5 +59,16 @@ public class Subject extends BaseEntity {
 
     public void setDef(boolean isDefault) {
         this.def = isDefault;
+    }
+
+    @Override
+    @NonNull
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void setUuid(@NonNull String uuid) {
+        this.uuid = uuid;
     }
 }

@@ -20,6 +20,6 @@ public interface SubjectDao extends BaseDao<Subject>{
     @Query("SELECT * FROM subjects WHERE def = '1'")
     List<Subject> getDefaultSubjects();
 
-    @Query("DELETE FROM subjects WHERE def = '0' AND uuid NOT IN(:availableSubjects)")
+    @Query("DELETE FROM subjects WHERE def = '0' AND subjectUuid NOT IN(:availableSubjects)")
     void deleteMissing(String availableSubjects);
 }

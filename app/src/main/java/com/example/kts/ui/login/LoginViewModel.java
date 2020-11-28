@@ -11,7 +11,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
 import com.example.SingleLiveData;
-import com.example.kts.data.model.entity.Group;
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.repository.UserRepository;
 
@@ -80,7 +79,7 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void onUserItemClick(User user) {
-        userRepository.saveUserPreference(user);
+        userRepository.loadUserPreference(user);
         currentProgress.setValue(0.65f);
         toolbarTitle.setValue("Авторизация");
         addFragment.setValue(FragmentType.NUM_PHONE);

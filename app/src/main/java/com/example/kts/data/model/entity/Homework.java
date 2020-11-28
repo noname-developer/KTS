@@ -1,7 +1,10 @@
 package com.example.kts.data.model.entity;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.util.List;
@@ -14,6 +17,10 @@ public class Homework extends BaseEntity {
     @TypeConverters({ListConverter.class})
     private List<String> imageUrlList;
     private boolean complete;
+    @NonNull
+    @PrimaryKey()
+    @ColumnInfo(name = "homeworkUuid")
+    protected String uuid;
 
     public Homework() {
     }

@@ -7,10 +7,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.kts.R;
@@ -24,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class WeekCalendarView extends CardView {
+public class WeekCalendarView extends LinearLayout {
 
     public static int CENTRAL_ITEM_POSITION = 3;
     private final WeekPageAdapter adapter = new WeekPageAdapter();
@@ -59,6 +61,7 @@ public class WeekCalendarView extends CardView {
 
     private void setUp() {
         initControl();
+        setBackground(ContextCompat.getDrawable(context, android.R.color.white));
         viewPagerWeek.setAdapter(adapter);
         pageChangeCallback = new ViewPager2.OnPageChangeCallback() {
             @Override

@@ -6,16 +6,14 @@ import android.util.Log;
 
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.GroupDao;
-import com.example.kts.data.dao.GroupSubjectDao;
 import com.example.kts.data.dao.SpecialtyDao;
 import com.example.kts.data.dao.SubjectDao;
-import com.example.kts.data.dao.TeacherSubjectDao;
+import com.example.kts.data.dao.GroupTeacherSubjectDao;
 import com.example.kts.data.dao.UserDao;
 import com.example.kts.data.model.entity.BaseEntity;
 import com.example.kts.data.model.entity.Group;
-import com.example.kts.data.model.entity.GroupSubjectCross;
+import com.example.kts.data.model.entity.GroupSubjectTeacherCrossRef;
 import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.TeacherSubjectCross;
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.model.firestore.GroupDoc;
 import com.example.kts.data.prefs.TimestampPreference;
@@ -38,11 +36,10 @@ import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.core.Completable;
 
-public class GroupTeacherSubjectRepository {
+public class GroupSubjectTeacherRepository {
 
     private final CollectionReference groupsRef;
-    private final TeacherSubjectDao teacherSubjectDao;
-    private final GroupSubjectDao groupSubjectDao;
+    private final GroupTeacherSubjectDao groupTeacherSubjectDao;
     private final UserDao userDao;
     private final SubjectDao subjectDao;
     private final GroupDao groupDao;
@@ -50,11 +47,10 @@ public class GroupTeacherSubjectRepository {
     private final TimestampPreference timestampPreference;
     private final Map<String, ListenerRegistration> registrationMap = new HashMap<>();
 
-    public GroupTeacherSubjectRepository(Application application) {
+    public GroupSubjectTeacherRepository(Application application) {
         DataBase dataBase = DataBase.getInstance(application);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        teacherSubjectDao = dataBase.teacherSubjectDao();
-        groupSubjectDao = dataBase.groupSubjectDao();
+        groupTeacherSubjectDao = dataBase.teacherSubjectDao();
         userDao = dataBase.userDao();
         subjectDao = dataBase.subjectDao();
         groupDao = dataBase.groupDao();
@@ -90,22 +86,23 @@ public class GroupTeacherSubjectRepository {
         subjectDao.insertList(subjects);
         Iterator<Subject> subjectIterator = groupDoc.getSubjects().iterator();
         Iterator<User> userIterator = groupDoc.getTeacherUsers().iterator();
+        groupDao.insert(groupDoc.toGroup());
         while (subjectIterator.hasNext() && userIterator.hasNext()) {
             Subject subject = subjectIterator.next();
             User teacher = userIterator.next();
-            teacherSubjectDao.insert(new TeacherSubjectCross(teacher.getUuid(), subject.getUuid()));
+            groupTeacherSubjectDao.insert(new GroupSubjectTeacherCrossRef(groupDoc.getUuid(), subject.getUuid(), teacher.getUuid()));
         }
     }
 
-    private void insertGroupAndSubjectsOfTeacher(@NotNull GroupDoc groupDoc, String userUuid) {
-        List<Subject> subjects = getSubjectsByTeacher(groupDoc, userUuid);
+    private void insertGroupAndSubjectsOfTeacher(@NotNull GroupDoc groupDoc, String teacherUuid) {
+        List<Subject> subjects = getSubjectsByTeacher(groupDoc, teacherUuid);
         subjectDao.insertList(subjects);
         groupDao.insert(groupDoc.toGroup());
         specialtyDao.insert(groupDoc.getSpecialty());
         for (Subject subject : subjects) {
             String groupUuid = groupDoc.getUuid();
             String subjectUuid = subject.getUuid();
-            groupSubjectDao.insert(new GroupSubjectCross(groupUuid, subjectUuid));
+            groupTeacherSubjectDao.insert(new GroupSubjectTeacherCrossRef(groupUuid, subjectUuid, teacherUuid));
         }
     }
 
@@ -161,16 +158,14 @@ public class GroupTeacherSubjectRepository {
                 groupDoc.setSpecialty((Map<String, String>) documents.get(0).get("specialty"));
                 availableSpecialtyUuidList.add(groupDoc.getSpecialtyUuid());
                 availableSubjectUuidList.addAll(getSubjectsByTeacher(groupDoc, teacherUserUuid).stream()
-                        .map(BaseEntity::getUuid)
+                        .map(Subject::getUuid)
                         .collect(Collectors.toList()));
                 availableGroupUuidList.add(groupDoc.getUuid());
                 String groupUuid = groupDoc.getUuid();
                 Group localGroup = groupDao.getByUuid(groupUuid);
-                if (localGroup != null) {
-                    if (groupDoc.getTimestampAsLong() < timestampPreference.getTimestampGroup(groupUuid)) {
-                        insertGroupAndSubjectsOfTeacher(groupDoc, teacherUserUuid);
-                        timestampPreference.setTimestampGroup(groupDoc.getUuid(), groupDoc.getTimestamp().getTime());
-                    }
+                if (localGroup != null && groupDoc.getTimestampAsLong() < timestampPreference.getTimestampGroup(groupUuid)) {
+                    insertGroupAndSubjectsOfTeacher(groupDoc, teacherUserUuid);
+                    timestampPreference.setTimestampGroup(groupDoc.getUuid(), groupDoc.getTimestamp().getTime());
                 } else insertGroupAndSubjectsOfTeacher(groupDoc, teacherUserUuid);
             }
 
@@ -191,10 +186,10 @@ public class GroupTeacherSubjectRepository {
             }
             GroupDoc groupDoc = snapshots.toObjects(GroupDoc.class).get(0);
             List<String> availableSubjectUuidList = groupDoc.getSubjects().stream()
-                    .map(BaseEntity::getUuid)
+                    .map(Subject::getUuid)
                     .collect(Collectors.toList());
             List<String> availableTeacherUserUuidList = groupDoc.getTeacherUsers().stream()
-                    .map(BaseEntity::getUuid)
+                    .map(User::getUuid)
                     .collect(Collectors.toList());
             if (timestampPreference.getTimestampGroup(groupDoc.getUuid()) < groupDoc.getTimestampAsLong()) {
                 String availableTeachers = TextUtils.join(",", availableTeacherUserUuidList);

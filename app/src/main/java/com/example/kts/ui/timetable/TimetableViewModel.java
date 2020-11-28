@@ -11,7 +11,7 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 
 import com.example.kts.calendar.model.Week;
-import com.example.kts.data.model.entity.LessonAndHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
 import com.example.kts.utils.DateFormatUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +26,10 @@ public class TimetableViewModel extends AndroidViewModel {
     private final SavedStateHandle savedStateHandle;
     private final TimetableInteractor interactor;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    public LiveData<List<LessonAndHomeworkAndSubject>> allLessonsForDay;
-    public MutableLiveData<String> toolbarName = new MutableLiveData<>();
-    public MutableLiveData<Date> lessonsDate = new MutableLiveData<>();
+    public final LiveData<List<LessonWithHomeworkAndSubject>> allLessonsForDay;
+    public final MutableLiveData<String> toolbarName = new MutableLiveData<>();
+    public final MutableLiveData<Date> lessonsDate = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> calendarShadowVisibility = new MutableLiveData<>(false);
 
     public TimetableViewModel(@NonNull Application application, @NonNull SavedStateHandle savedStateHandle) {
         super(application);
@@ -70,5 +71,14 @@ public class TimetableViewModel extends AndroidViewModel {
         super.onCleared();
         compositeDisposable.clear();
         interactor.removeRegistrations();
+    }
+
+    public void onScroll(boolean scrollVertically, int i) {
+        if (scrollVertically) {
+            if (!calendarShadowVisibility.getValue())
+                calendarShadowVisibility.postValue(true);
+        } else {
+            calendarShadowVisibility.postValue(false);
+        }
     }
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="app_name">KTS</string>
+    <string name="app_name">КТС</string>
     <string name="menu_title_home">Главная</string>
     <string name="menu_title_timetable">Расписание</string>
     <string name="menu_title_group">Группа</string>
@@ -10,4 +10,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="group_users">Участники</string>
+    <string name="group_subjects">Предметы</string>
 </resources>

@@ -13,6 +13,7 @@ import com.example.kts.data.model.entity.Group;
 import com.example.kts.data.model.entity.Specialty;
 import com.example.kts.data.model.firestore.GroupDoc;
 import com.example.kts.data.prefs.GroupPreference;
+import com.example.kts.data.prefs.TimestampPreference;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 public class GroupRepository {
@@ -33,6 +33,7 @@ public class GroupRepository {
     private final GroupDao groupDao;
     private final CollectionReference groupsRef, specialtiesRef;
     private final GroupPreference groupPreference;
+    private final TimestampPreference timestampPreference;
 
     public GroupRepository(Application application) {
         DataBase dataBase = DataBase.getInstance(application);
@@ -41,19 +42,19 @@ public class GroupRepository {
         groupsRef = firestore.collection("Groups");
         groupDao = dataBase.groupDao();
         groupPreference = new GroupPreference(application);
+        timestampPreference = new TimestampPreference(application);
     }
 
     public LiveData<GroupInfo> getGroupInfoByUuid(String groupUuid) {
         MutableLiveData<GroupInfo> data = new MutableLiveData<>();
+        if (groupDao.getByUuid(groupUuid) != null) {
+            //todo
+        } else {
+
+        }
         groupsRef.whereEqualTo("uuid", groupUuid)
-                .addSnapshotListener((snapshots, error) -> {
-                    Log.d("lol", "НЕНАДО МНОГОРАЗ!!!!: ");
-                    if (error != null) {
-                        Log.d("lol", "getGroupInfoByUuid: ");
-                    }
-                    int size = snapshots.size();
-                    data.setValue(snapshots.getDocuments().get(0).toObject(GroupDoc.class).toGroupInfo());
-                });
+                .get()
+                .addOnSuccessListener(snapshots -> data.setValue(snapshots.getDocuments().get(0).toObject(GroupDoc.class).toGroupInfo()));
         return data;
     }
 
@@ -64,7 +65,6 @@ public class GroupRepository {
             if (error != null) {
                 Log.d("lol", "getGroupsBySpecialtyUuid: ", error);
             }
-            int size = snapshot.size();
             groupsByUuid.setValue(snapshot.toObjects(Group.class));
         });
         return groupsByUuid;
@@ -109,7 +109,7 @@ public class GroupRepository {
         return groupPreference.getGroupUuid();
     }
 
-    public String getGroupName() {
+    public String getYourGroupName() {
         return groupPreference.getGroupName();
     }
 
@@ -122,9 +122,13 @@ public class GroupRepository {
     }
 
     public void updateGroupInfo(@NotNull GroupInfo groupInfo) {
-        Log.d("lol", "ОБНОВИ РАЗ!!!!!: ");
         groupsRef.document(groupInfo.getUuid()).update(groupInfo.toMap())
                 .addOnSuccessListener(aVoid -> Log.d("lol", "onSuccess: "))
                 .addOnFailureListener(e -> Log.d("lol", "onFailure: "));
+    }
+
+    public String getGroupNameByUuid(String groupUuid) {
+        Group group = groupDao.getByUuid(groupUuid);
+        return group.getName();
     }
 }

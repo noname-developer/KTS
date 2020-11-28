@@ -6,17 +6,17 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonAndHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
 
 import java.util.List;
 
 @Dao
 public interface LessonDao extends BaseDao<LessonEntity> {
 
-    @Query("SELECT * FROM lessons WHERE uuid=:uuid")
+    @Query("SELECT * FROM lessons WHERE lessonUuid=:uuid")
     LessonEntity getByUuid(String uuid);
 
     @Transaction
     @Query("SELECT * FROM lessons WHERE date=:date ORDER BY `order`")
-    LiveData<List<LessonAndHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(String date);
+    LiveData<List<LessonWithHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(String date);
 }

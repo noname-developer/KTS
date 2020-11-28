@@ -21,12 +21,19 @@
         android:id="@+id/menu_group"
         android:name="com.example.kts.ui.group.GroupFragment"
         android:label="@string/menu_title_group"
-        tools:layout="@layout/fragment_group" />
+        tools:layout="@layout/fragment_group"/>
+
+    <fragment
+        android:id="@+id/group_editor"
+        android:name="com.example.kts.ui.group.GroupFragment"
+        android:label="@string/menu_title_group"
+        tools:layout="@layout/fragment_group"/>
+
     <fragment
         android:id="@+id/menu_admin_panel"
         android:name="com.example.kts.ui.adminPanel.AdminPanelFragment"
         android:label="@string/menu_title_control_panel"
-        tools:layout="@layout/item_icon_content" >
+        tools:layout="@layout/item_icon_content">
         <action
             android:id="@+id/action_menu_admin_panel_to_timetableEditorFragment"
             app:destination="@id/timetableEditorFragment" />
@@ -45,12 +52,7 @@
         android:label="fragment_choice_of_group"
         tools:layout="@layout/fragment_choice_of_group" >
         <action
-            android:id="@+id/action_choiceOfGroupFragment_to_groupEditorFragment"
-            app:destination="@id/groupEditorFragment"/>
+            android:id="@+id/action_choiceOfGroupFragment_to_group_editor"
+            app:destination="@id/group_editor" />
     </fragment>
-    <fragment
-        android:id="@+id/groupEditorFragment"
-        android:name="com.example.kts.ui.adminPanel.groupEditor.GroupEditorFragment"
-        android:label="fragment_group_editor"
-        tools:layout="@layout/fragment_group_editor" />
 </navigation>

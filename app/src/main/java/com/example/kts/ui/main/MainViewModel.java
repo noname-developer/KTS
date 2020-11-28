@@ -9,6 +9,7 @@ import androidx.lifecycle.SavedStateHandle;
 
 import com.example.SingleLiveData;
 import com.example.kts.R;
+import com.example.kts.data.model.domain.Lesson;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.Date;
@@ -75,5 +76,9 @@ public class MainViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         interactor.removeRegistrations();
+    }
+
+    public String getGroupUuid() {
+        return "ololololol";
     }
 }

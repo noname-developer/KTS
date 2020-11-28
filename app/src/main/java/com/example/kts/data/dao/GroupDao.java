@@ -14,9 +14,9 @@ public interface GroupDao extends BaseDao<Group> {
     @Query("SELECT * FROM groups")
     LiveData<List<Group>> getAllGroups();
 
-    @Query("SELECT * FROM groups WHERE uuid=:uuid")
+    @Query("SELECT * FROM groups WHERE groupUuid=:uuid")
     Group getByUuid(String uuid);
 
-    @Query("DELETE FROM groups WHERE uuid NOT IN(:availableGroups)")
+    @Query("DELETE FROM groups WHERE groupUuid NOT IN(:availableGroups)")
     void deleteMissing(String availableGroups);
 }
