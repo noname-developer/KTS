@@ -6,8 +6,8 @@ import androidx.room.Query;
 import com.example.kts.data.model.entity.Specialty;
 
 @Dao
-public interface SpecialtyDao extends BaseDao<Specialty> {
+public abstract class SpecialtyDao extends BaseDao<Specialty> {
 
     @Query("DELETE FROM specialties WHERE specialtyUuid NOT IN (:availableSpecialties)")
-    void deleteMissing(String availableSpecialties);
+    public abstract void deleteMissing(String availableSpecialties);
 }

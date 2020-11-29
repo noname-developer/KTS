@@ -7,7 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "specialties")
-public class Specialty extends BaseEntity {
+public class Specialty implements IBaseEntity {
 
     private String name;
     @NonNull
@@ -30,5 +30,15 @@ public class Specialty extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

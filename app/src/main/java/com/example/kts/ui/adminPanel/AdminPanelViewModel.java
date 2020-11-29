@@ -2,8 +2,7 @@ package com.example.kts.ui.adminPanel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.SingleLiveData;
-import com.example.kts.R;
+import com.example.kts.SingleLiveData;
 import com.example.kts.data.model.domain.ListItem;
 
 import java.util.Arrays;

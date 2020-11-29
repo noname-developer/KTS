@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import ro.alexmamo.firestore_document.FirestoreDocument;
 
@@ -50,40 +49,40 @@ public class UserRepository {
         return userListByRoleRangeAndGroupUuid;
     }
 
-    public LiveData<List<User>> getStudentUsersByGroupUuid(String groupUuid) {
-        return getUsersByRoleAndGroupUuid(groupUuid, User.STUDENT, User.DEPUTY_HEADMAN, User.HEADMAN);
-    }
-
-    public Completable loadUsersOfGroup(String groupUuid) {
-        return Completable.create(emitter -> usersRef.whereEqualTo("groupUuid", groupUuid).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                userDao.insertList(task.getResult().toObjects(User.class));
-                emitter.onComplete();
-            } else {
-                emitter.onError(task.getException());
-            }
-        }));
-    }
+//    public LiveData<List<User>> getStudentsOfGroupByGroupUuid(String groupUuid) {
+//        return getUsersByRoleAndGroupUuid(groupUuid, User.STUDENT, User.DEPUTY_HEADMAN, User.HEADMAN);
+//    }
+//
+//    public Completable loadUsersOfGroup(String groupUuid) {
+//        return Completable.create(emitter -> usersRef.whereEqualTo("groupUuid", groupUuid).get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                userDao.insert(task.getResult().toObjects(User.class));
+//                emitter.onComplete();
+//            } else {
+//                emitter.onError(task.getException());
+//            }
+//        }));
+//    }
 
     public LiveData<List<User>> getUsersByGroupUuid(String groupUuid) {
         //todo check null and get group in fireStore
         return userDao.getUsersByGroupUuid(groupUuid);
     }
 
-    public LiveData<List<User>> getUsersByRoleAndGroupUuid(String groupUuid, String... roles) {
-        MutableLiveData<List<User>> userListByRoleRangeAndGroupUuid = new MutableLiveData<>();
-        usersRef.whereEqualTo("groupUuid", groupUuid)
-                .whereIn("role", Arrays.asList(roles))
-                .orderBy("secondName")
-                .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                userListByRoleRangeAndGroupUuid.setValue(task.getResult().toObjects(User.class));
-            } else {
-                Log.d("lol", "onFail: " + task.getException());
-            }
-        });
-        return userListByRoleRangeAndGroupUuid;
-    }
+//    public LiveData<List<User>> getUsersByRoleAndGroupUuid(String groupUuid, String... roles) {
+//        MutableLiveData<List<User>> userListByRoleRangeAndGroupUuid = new MutableLiveData<>();
+//        usersRef.whereEqualTo("groupUuid", groupUuid)
+//                .whereIn("role", Arrays.asList(roles))
+//                .orderBy("secondName")
+//                .get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                userListByRoleRangeAndGroupUuid.setValue(task.getResult().toObjects(User.class));
+//            } else {
+//                Log.d("lol", "onFail: " + task.getException());
+//            }
+//        });
+//        return userListByRoleRangeAndGroupUuid;
+//    }
 
     public void loadUserPreference(@NotNull User user) {
         userPreference.setUuid(user.getUuid());

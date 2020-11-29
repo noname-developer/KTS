@@ -9,11 +9,11 @@ import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.HomeworkDao;
 import com.example.kts.data.dao.LessonDao;
 import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
 import com.example.kts.data.model.firestore.LessonsDoc;
 import com.example.kts.data.prefs.AppPreferences;
 import com.example.kts.data.prefs.GroupPreference;
-import com.example.kts.utils.DateFormatUtils;
+import com.example.kts.utils.DateFormatUtil;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -84,7 +84,7 @@ public class LessonRepository {
         return hashLesson;
     }
 
-    public LiveData<List<LessonWithHomeworkAndSubject>> getLessonWithHomeWorkWithSubjectByDate(String date) {
+    public LiveData<List<LessonHomeworkSubjectEntities>> getLessonWithHomeWorkWithSubjectByDate(String date) {
         if (!registrationMap.containsKey(date)) {
             registrationMap.put(date, getLessonsByDateListener(date));
         }
@@ -102,7 +102,7 @@ public class LessonRepository {
     @NotNull
     private ListenerRegistration getLessonsByDateListener(String date) {
         return lessonsRef
-                .whereEqualTo("date", DateFormatUtils.convertStringToDate(date, DateFormatUtils.YYYY_MM_DD))
+                .whereEqualTo("date", DateFormatUtil.convertStringToDate(date, DateFormatUtil.YYYY_MM_DD))
                 .addSnapshotListener((snapshots, error) -> {
                     if (error != null) {
                         Log.w("lol", "listen:error", error);
@@ -159,7 +159,7 @@ public class LessonRepository {
                                     .filter(lesson -> lesson.getTeacherUserUuidList().contains(teacherUserUuid))
                                     .collect(Collectors.toList()));
                         }
-                        lessonDao.insertList(lessonEntityWithRequiredTeacherUser);
+                        lessonDao.insert(lessonEntityWithRequiredTeacherUser);
                         emitter.onComplete();
                     } else {
                         emitter.onError(task.getException());
@@ -178,8 +178,8 @@ public class LessonRepository {
                 .addOnSuccessListener(snapshots -> {
                     if (!snapshots.isEmpty()) {
                         for (LessonsDoc lessonsDoc : snapshots.toObjects(LessonsDoc.class)) {
-                            lessonDao.insertList(lessonsDoc.getLessons());
-                            homeworkDao.insertList(lessonsDoc.getHomework());
+                            lessonDao.insert(lessonsDoc.getLessons());
+                            homeworkDao.insert(lessonsDoc.getHomework());
                         }
                     }
                     emitter.onComplete();

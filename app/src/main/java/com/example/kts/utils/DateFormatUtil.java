@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateFormatUtils {
+public final class DateFormatUtil {
 
     private static final Calendar calToday = Calendar.getInstance();
     public static String YYYY_MM_DD = "yyyy-MM-dd";

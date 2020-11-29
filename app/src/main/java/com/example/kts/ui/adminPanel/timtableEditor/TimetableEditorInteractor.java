@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.kts.data.TimetableDocumentParser;
 import com.example.kts.data.model.domain.GroupWeekLessons;
 import com.example.kts.data.model.domain.Lesson;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.Homework;
 import com.example.kts.data.model.entity.LessonEntity;
 import com.example.kts.data.model.entity.Subject;
@@ -93,7 +93,7 @@ public class TimetableEditorInteractor {
 
             private void addHomeworkOfThisWeek(@NotNull List<GroupWeekLessons> groupWeekLessonsList) {
                 for (GroupWeekLessons groupWeekLessons : groupWeekLessonsList) {
-                    Group group = groupWeekLessons.getGroup();
+                    GroupEntity groupEntity = groupWeekLessons.getGroupEntity();
 
                     List<LessonEntity> futureLessons = Arrays.asList(
                             new LessonEntity("dfgdfg", 0, 1,

@@ -1,11 +1,10 @@
 package com.example.kts.data.model.domain;
 
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.Homework;
 import com.example.kts.data.model.entity.Subject;
 import com.example.kts.data.model.entity.User;
 
-import java.util.Date;
 import java.util.List;
 
 public class Lesson {
@@ -16,7 +15,7 @@ public class Lesson {
     private Subject subject;
     private Homework homework;
     private int order;
-    private Group group;
+    private GroupEntity groupEntity;
     private List<User> teacherUsers;
 
     public Lesson(String room, Subject subject, int order, List<User> teacherUsers, String date) {
@@ -59,12 +58,12 @@ public class Lesson {
         this.homework = homework;
     }
 
-    public Group getGroup() {
-        return group;
+    public GroupEntity getGroupEntity() {
+        return groupEntity;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupEntity(GroupEntity groupEntity) {
+        this.groupEntity = groupEntity;
     }
 
     public int getOrder() {

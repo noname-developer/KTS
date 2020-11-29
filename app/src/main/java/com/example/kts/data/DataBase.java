@@ -15,7 +15,7 @@ import com.example.kts.data.dao.SpecialtyDao;
 import com.example.kts.data.dao.SubjectDao;
 import com.example.kts.data.dao.GroupTeacherSubjectDao;
 import com.example.kts.data.dao.UserDao;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.GroupSubjectTeacherCrossRef;
 import com.example.kts.data.model.entity.Homework;
 import com.example.kts.data.model.entity.LessonEntity;
@@ -27,7 +27,7 @@ import com.example.kts.data.model.entity.User;
         LessonEntity.class,
         Homework.class,
         User.class,
-        Group.class,
+        GroupEntity.class,
         Specialty.class,
         GroupSubjectTeacherCrossRef.class},
         version = 1)

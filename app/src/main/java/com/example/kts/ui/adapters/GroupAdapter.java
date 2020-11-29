@@ -1,6 +1,5 @@
 package com.example.kts.ui.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kts.R;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.Specialty;
 
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +61,7 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public int getItemViewType(int position) {
         Object o = itemsList.get(position);
-        if (o instanceof Group) {
+        if (o instanceof GroupEntity) {
             return TYPE_GROUP;
         } else if (o instanceof Specialty) {
             return TYPE_SPECIALTY;
@@ -117,7 +116,7 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    static class GroupHolder extends BaseViewHolder<Group> {
+    static class GroupHolder extends BaseViewHolder<GroupEntity> {
 
         private final TextView tvName;
 
@@ -127,7 +126,7 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         @Override
-        void onBind(@NotNull Group item) {
+        void onBind(@NotNull GroupEntity item) {
             tvName.setText((item.getName()));
             itemView.setOnClickListener(view -> getListener().onItemClick(getAdapterPosition()));
         }

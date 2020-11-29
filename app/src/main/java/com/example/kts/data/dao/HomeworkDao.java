@@ -9,8 +9,8 @@ import com.example.kts.data.model.entity.Homework;
 import java.util.List;
 
 @Dao
-public interface HomeworkDao extends BaseDao<Homework> {
+public abstract class HomeworkDao extends BaseDao<Homework> {
 
     @Query("UPDATE homework SET complete = :checked")
-    void updateHomeworkCompletion(int checked);
+    public abstract void updateHomeworkCompletion(int checked);
 }

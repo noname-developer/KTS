@@ -20,7 +20,7 @@ import com.example.kts.R;
 import com.example.kts.calendar.WeekCalendarListener;
 import com.example.kts.calendar.WeekCalendarView;
 import com.example.kts.calendar.model.Week;
-import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
 import com.example.kts.data.model.entity.LessonEntity;
 import com.example.kts.data.model.entity.Subject;
 import com.example.kts.ui.DividerItemDecorator;
@@ -89,61 +89,61 @@ public class TimetableFragment extends Fragment implements WeekCalendarListener,
 
             //todo для теста
             adapter.setData(Arrays.asList(
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,-1,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,-1,"","","")
                     , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red")),
-                    new LessonWithHomeworkAndSubject(new LessonEntity("",0,0,"","","")
+                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
                             , null, new Subject("", "", "","red"))
             ));
 

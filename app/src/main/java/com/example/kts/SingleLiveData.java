@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.example;
+package com.example.kts;
 
 import android.util.Log;
 

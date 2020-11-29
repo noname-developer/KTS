@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kts.R;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.ui.adapters.GroupAdapter;
 import com.example.kts.utils.diffutils.GroupAndSpecialtyDiffUtilCallback;
 
@@ -37,7 +37,7 @@ public class ChoiceOfGroupFragment extends Fragment {
 
         adapter.setSpecialtyItemClickListener(position -> viewModel.onSpecialtyItemClick(position));
 
-        adapter.setGroupItemClickListener(position -> viewModel.onGroupItemClick(((Group) adapter.getData().get(position))));
+        adapter.setGroupItemClickListener(position -> viewModel.onGroupItemClick(((GroupEntity) adapter.getData().get(position)).getUuid()));
 
         return root;
     }

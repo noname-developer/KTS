@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.SingleLiveData;
+import com.example.kts.SingleLiveData;
 import com.example.kts.RxBusSubjectTeacher;
 import com.example.kts.data.model.domain.GroupInfo;
 import com.example.kts.data.repository.GroupRepository;

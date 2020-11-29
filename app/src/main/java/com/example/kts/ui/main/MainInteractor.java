@@ -3,33 +3,33 @@ package com.example.kts.ui.main;
 import android.app.Application;
 
 import com.example.kts.data.model.entity.User;
+import com.example.kts.data.prefs.TimestampPreference;
 import com.example.kts.data.repository.GroupRepository;
-import com.example.kts.data.repository.GroupSubjectTeacherRepository;
+import com.example.kts.data.repository.GroupInfoRepository;
 import com.example.kts.data.repository.UserRepository;
 
 public class MainInteractor {
 
-    private final GroupSubjectTeacherRepository groupSubjectTeacherRepository;
+    private final GroupInfoRepository groupInfoRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final TimestampPreference timestampPreference;
 
     public MainInteractor(Application application) {
-        groupSubjectTeacherRepository = new GroupSubjectTeacherRepository(application);
+        groupInfoRepository = new GroupInfoRepository(application);
         groupRepository = new GroupRepository(application);
         userRepository = new UserRepository(application);
+        timestampPreference = new TimestampPreference(application);
         User user = userRepository.getUser();
 
-        if (user.hasGroup()) {
-            groupSubjectTeacherRepository.getGroupByUuid(groupRepository.getGroupUuid());
-        }
-
         if (user.isTeacher()) {
-            groupSubjectTeacherRepository.getGroupsByTeacherUser(user);
-        } else if (user.isStudent()) {
-
+            groupInfoRepository.getUpdatedGroupsByTeacher(user, timestampPreference.getTimestampGroups());
+        }
+        if (user.isStudent() || user.isCurator() && !groupInfoRepository.isGroupHasSuchTeacher(user.getUuid(), user.getGroupUuid())) {
+            groupInfoRepository.getUpdatedGroupByUuidAndTimestamp(groupRepository.getGroupUuid(), timestampPreference.getTimestampGroups());
         }
     }
     public void removeRegistrations() {
-        groupSubjectTeacherRepository.removeRegistrations();
+        groupInfoRepository.removeRegistrations();
     }
 }

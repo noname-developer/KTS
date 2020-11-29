@@ -1,25 +1,25 @@
 package com.example.kts.data.model.domain;
 
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 
 import java.util.List;
 
 public class GroupWeekLessons {
 
-    private Group group;
+    private GroupEntity groupEntity;
     private List<Lesson> weekLessons;
 
-    public GroupWeekLessons(Group group, List<Lesson> weekLessons) {
-        this.group = group;
+    public GroupWeekLessons(GroupEntity groupEntity, List<Lesson> weekLessons) {
+        this.groupEntity = groupEntity;
         this.weekLessons = weekLessons;
     }
 
-    public Group getGroup() {
-        return group;
+    public GroupEntity getGroupEntity() {
+        return groupEntity;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroupEntity(GroupEntity groupEntity) {
+        this.groupEntity = groupEntity;
     }
 
     public List<Lesson> getWeekLessons() {

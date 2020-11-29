@@ -2,18 +2,14 @@ package com.example.kts.data.repository;
 
 import android.app.Application;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.SubjectDao;
 import com.example.kts.data.model.entity.Subject;
 import com.example.kts.data.prefs.GroupPreference;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
@@ -39,7 +35,7 @@ public class SubjectRepository {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Subject> list = queryDocumentSnapshots.toObjects(Subject.class);
-                    subjectDao.insertList(list);
+                    subjectDao.insert(list);
                     emitter.onComplete();
                 })
                 .addOnFailureListener(emitter::onError));

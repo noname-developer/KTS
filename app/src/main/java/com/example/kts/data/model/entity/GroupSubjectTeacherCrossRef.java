@@ -6,7 +6,7 @@ import androidx.room.ForeignKey;
 
 @Entity(tableName = "group_subject_teacher", primaryKeys = {"groupUuid", "subjectUuid", "teacherUuid"},
         foreignKeys = {
-                @ForeignKey(entity = Group.class,
+                @ForeignKey(entity = GroupEntity.class,
                         parentColumns = "groupUuid",
                         childColumns = "groupUuid"),
                 @ForeignKey(entity = Subject.class,

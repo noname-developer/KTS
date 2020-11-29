@@ -10,11 +10,11 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.example.SingleLiveData;
 import com.example.kts.RxBusChoiceOfGroup;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.Specialty;
 import com.example.kts.data.repository.GroupRepository;
+import com.example.kts.data.repository.GroupInfoRepository;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -29,16 +29,17 @@ public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
 
     private final Map<String, Boolean> expandableSpecialties = new HashMap<>();
     private final GroupRepository groupRepository;
+    private final GroupInfoRepository groupInfoRepository;
     public LiveData<List<Specialty>> allSpecialties;
-    public LiveData<List<Group>> groupsBySpecialty;
+    public LiveData<List<GroupEntity>> groupsBySpecialty;
     public MutableLiveData<String> selectedSpecialtyUuid = new MutableLiveData<>();
-    public SingleLiveData<String> selectedGroupUuid = new SingleLiveData<>();
     public MediatorLiveData<List<Object>> groupAndSpecialtyList = new MediatorLiveData<>();
 
     public ChoiceOfGroupSharedViewModel(@NonNull Application application) {
         super(application);
         groupRepository = new GroupRepository(application);
         groupsBySpecialty = Transformations.switchMap(selectedSpecialtyUuid, groupRepository::getGroupsBySpecialtyUuid);
+        groupInfoRepository = new GroupInfoRepository(application);
         allSpecialties = groupRepository.getAllSpecialties();
 
         groupAndSpecialtyList.addSource(allSpecialties, specialtyList -> {
@@ -65,8 +66,8 @@ public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
     private String getSpecialtyUuid(Object o) {
         if (o instanceof Specialty) {
             return ((Specialty) o).getUuid();
-        } else if (o instanceof Group) {
-            return ((Group) o).getSpecialtyUuid();
+        } else if (o instanceof GroupEntity) {
+            return ((GroupEntity) o).getSpecialtyUuid();
         }
         return null;
     }
@@ -85,22 +86,22 @@ public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
         expandableSpecialties.replace(specialtyName, !expandableSpecialties.get(specialtyName));
     }
 
+    public void onGroupItemClick(@NotNull String groupUuid) {
+        groupInfoRepository.loadGroupInfo(groupUuid);
+        RxBusChoiceOfGroup.getInstance().postSelectGroupEvent(groupUuid);
+    }
+
     @NotNull
-    private List<Group> getGroupListBySpecialtyUuid(String specialtyUuid) {
-        List<Group> groupListBySpecialty = new ArrayList<>();
+    private List<GroupEntity> getGroupListBySpecialtyUuid(String specialtyUuid) {
+        List<GroupEntity> groupEntityListBySpecialty = new ArrayList<>();
         for (Object o : groupAndSpecialtyList.getValue()) {
-            if (o instanceof Group) {
-                if (((Group) o).getSpecialtyUuid().equals(specialtyUuid)) {
-                    groupListBySpecialty.add((Group) o);
+            if (o instanceof GroupEntity) {
+                if (((GroupEntity) o).getSpecialtyUuid().equals(specialtyUuid)) {
+                    groupEntityListBySpecialty.add((GroupEntity) o);
                 }
             }
         }
-        return groupListBySpecialty;
-    }
-
-    public void onGroupItemClick(@NotNull Group group) {
-//        selectedGroupUuid.setValue(group.getUuid());
-        RxBusChoiceOfGroup.getInstance().postSelectGroupEvent(group.getUuid());
+        return groupEntityListBySpecialty;
     }
 
     @Override

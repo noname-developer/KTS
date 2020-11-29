@@ -163,6 +163,10 @@ public class User implements IBaseEntity {
         this.uuid = uuid;
     }
 
+    public boolean isCurator() {
+        return isTeacher() && hasGroup();
+    }
+
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({STUDENT, DEPUTY_HEADMAN, HEADMAN, TEACHER, HEAD_TEACHER, ADMIN})
     @interface role {

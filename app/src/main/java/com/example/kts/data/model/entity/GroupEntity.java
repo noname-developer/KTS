@@ -13,7 +13,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 @Entity(tableName = "groups")
-public class Group implements IBaseEntity {
+public class GroupEntity implements IBaseEntity {
 
     @NonNull
     @PrimaryKey()
@@ -27,7 +27,7 @@ public class Group implements IBaseEntity {
     private Date timestamp;
 
     @Ignore
-    public Group(@Nonnull String uuid, String name, int course, String specialtyUuid, Date timestamp) {
+    public GroupEntity(@Nonnull String uuid, String name, int course, String specialtyUuid, Date timestamp) {
         this.uuid = uuid;
         this.name = name;
         this.course = course;
@@ -36,7 +36,7 @@ public class Group implements IBaseEntity {
     }
 
     @Ignore
-    public Group(String name, int course, String specialtyUuid, Date timestamp) {
+    public GroupEntity(String name, int course, String specialtyUuid, Date timestamp) {
         uuid = UUID.randomUUID().toString();
         this.name = name;
         this.course = course;
@@ -44,7 +44,7 @@ public class Group implements IBaseEntity {
         this.timestamp = timestamp;
     }
 
-    public Group() {
+    public GroupEntity() {
     }
 
     public String getName() {

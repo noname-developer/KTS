@@ -7,7 +7,7 @@ import com.example.kts.data.model.domain.Lesson;
 import com.example.kts.data.model.entity.Subject;
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.model.firestore.GroupDoc;
-import com.example.kts.utils.DateFormatUtils;
+import com.example.kts.utils.DateFormatUtil;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -66,7 +66,7 @@ public class TimetableDocumentParser {
                 posCellOfGroup = cellsInGroups.indexOf(getCellByGroupName(cellsInGroups, groupDoc.getName()));
                 int cellsCount = table.getRow(1).getTableCells().size();
                 posCellOfGroup = posCellOfGroup > cellsCount ? posCellOfGroup - cellsCount : posCellOfGroup;
-                groupWeekLessonsList.add(new GroupWeekLessons(groupDoc.toGroup(), TimetableDocumentParser.this.getLessonsOfGroup()));
+                groupWeekLessonsList.add(new GroupWeekLessons(groupDoc.toGroupEntity(), TimetableDocumentParser.this.getLessonsOfGroup()));
             }
             emitter.onSuccess(groupWeekLessonsList);
         });
@@ -88,7 +88,7 @@ public class TimetableDocumentParser {
             Log.d("lol", "getLessonsOfGroup: " + dateInCell);
             currentRow++;
             String date = dateInCell.substring(dateInCell.lastIndexOf(" ") + 1);
-            if (DateFormatUtils.validateDateOfString(date, DateFormatUtils.DD_MM_YY)) {
+            if (DateFormatUtil.validateDateOfString(date, DateFormatUtil.DD_MM_YY)) {
                 weekLessons.addAll(getLessonsOfTheDay(date));
             } else {
                 //todo добавить ошибку с датой

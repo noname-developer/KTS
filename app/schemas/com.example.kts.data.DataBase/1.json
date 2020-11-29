@@ -2,12 +2,18 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2b1bc7a2c56b21262cd0170c7fbe4bf9",
+    "identityHash": "0f1e0c477d50946a20eb9a4024e8c8f3",
     "entities": [
       {
         "tableName": "subjects",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `iconUrl` TEXT, `colorName` TEXT, `def` INTEGER NOT NULL, `subjectUuid` TEXT NOT NULL, PRIMARY KEY(`subjectUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subjectUuid` TEXT NOT NULL, `name` TEXT, `iconUrl` TEXT, `colorName` TEXT, `def` INTEGER NOT NULL, PRIMARY KEY(`subjectUuid`))",
         "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "subjectUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "name",
             "columnName": "name",
@@ -30,12 +36,6 @@
             "fieldPath": "def",
             "columnName": "def",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "uuid",
-            "columnName": "subjectUuid",
-            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -236,8 +236,14 @@
       },
       {
         "tableName": "groups",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupName` TEXT, `course` INTEGER NOT NULL, `specialtyUuid` TEXT, `timestamp` TEXT, `groupUuid` TEXT NOT NULL, PRIMARY KEY(`groupUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupUuid` TEXT NOT NULL, `groupName` TEXT, `course` INTEGER NOT NULL, `specialtyUuid` TEXT, `timestamp` TEXT, PRIMARY KEY(`groupUuid`))",
         "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "groupUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "name",
             "columnName": "groupName",
@@ -261,12 +267,6 @@
             "columnName": "timestamp",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "uuid",
-            "columnName": "groupUuid",
-            "affinity": "TEXT",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -280,7 +280,7 @@
       },
       {
         "tableName": "specialties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `specialtyUuid` TEXT NOT NULL, `uuid` TEXT, PRIMARY KEY(`specialtyUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `specialtyUuid` TEXT NOT NULL, PRIMARY KEY(`specialtyUuid`))",
         "fields": [
           {
             "fieldPath": "name",
@@ -293,12 +293,6 @@
             "columnName": "specialtyUuid",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -382,7 +376,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b1bc7a2c56b21262cd0170c7fbe4bf9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f1e0c477d50946a20eb9a4024e8c8f3')"
     ]
   }
 }

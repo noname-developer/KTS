@@ -1,10 +1,11 @@
 package com.example.kts.data.model.firestore;
 
 import com.example.kts.data.model.domain.GroupInfo;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.Specialty;
 import com.example.kts.data.model.entity.Subject;
 import com.example.kts.data.model.entity.User;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,18 +20,26 @@ public class GroupDoc {
     private String specialtyUuid;
     private List<Subject> subjects;
     private List<User> teacherUsers;
+    private List<User> users;
     private String uuid;
     private Date timestamp;
     private Specialty specialty;
 
     public GroupDoc() {
     }
-
     public GroupDoc(String name, int course, List<Subject> subjects, List<User> teacherUsers) {
         this.name = name;
         this.course = course;
         this.subjects = subjects;
         this.teacherUsers = teacherUsers;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public int getCourse() {
@@ -97,20 +106,12 @@ public class GroupDoc {
         return specialty;
     }
 
-    public void setSpecialty(@NotNull Map<String, String> specialty) {
-        String uuid = specialty.get("uuid");
-        String name = specialty.get("name");
-        this.specialty = new Specialty(uuid, name);
+    public void setSpecialty(Specialty specialty) {
+        this.specialty = specialty;
     }
 
-    public Group toGroup() {
-        Group group = new Group(uuid, name, course, specialtyUuid, timestamp);
-        group.setName(name);
-        group.setCourse(course);
-        group.setSpecialtyUuid(specialtyUuid);
-        group.setTimestamp(timestamp);
-        group.setUuid(uuid);
-        return group;
+    public GroupEntity toGroupEntity() {
+        return new GroupEntity(uuid, name, course, specialtyUuid, timestamp);
     }
 
     public GroupInfo toGroupInfo() {

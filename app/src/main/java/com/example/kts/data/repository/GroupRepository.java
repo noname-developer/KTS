@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.GroupDao;
 import com.example.kts.data.model.domain.GroupInfo;
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.Specialty;
 import com.example.kts.data.model.firestore.GroupDoc;
 import com.example.kts.data.prefs.GroupPreference;
@@ -58,14 +58,14 @@ public class GroupRepository {
         return data;
     }
 
-    public LiveData<List<Group>> getGroupsBySpecialtyUuid(String specialtyUuid) {
-        MutableLiveData<List<Group>> groupsByUuid = new MutableLiveData<>();
+    public LiveData<List<GroupEntity>> getGroupsBySpecialtyUuid(String specialtyUuid) {
+        MutableLiveData<List<GroupEntity>> groupsByUuid = new MutableLiveData<>();
         Log.d("lol", "getGroupsBySpecialtyUuid: ");
         groupsRef.whereEqualTo("specialtyUuid", specialtyUuid).addSnapshotListener((snapshot, error) -> {
             if (error != null) {
                 Log.d("lol", "getGroupsBySpecialtyUuid: ", error);
             }
-            groupsByUuid.setValue(snapshot.toObjects(Group.class));
+            groupsByUuid.setValue(snapshot.toObjects(GroupEntity.class));
         });
         return groupsByUuid;
     }
@@ -88,7 +88,7 @@ public class GroupRepository {
             public void onComplete(@androidx.annotation.NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot snapshot : task.getResult()) {
-                        saveGroupPreference(snapshot.toObject(Group.class));
+                        saveGroupPreference(snapshot.toObject(GroupEntity.class));
                     }
                     emitter.onComplete();
                 } else {
@@ -96,11 +96,11 @@ public class GroupRepository {
                 }
             }
 
-            private void saveGroupPreference(@NotNull Group group) {
-                groupPreference.setGroupName(group.getName());
-                groupPreference.setGroupCourse(group.getCourse());
-                groupPreference.setGroupSpecialtyUuid(group.getSpecialtyUuid());
-                groupPreference.setGroupUuid(group.getUuid());
+            private void saveGroupPreference(@NotNull GroupEntity groupEntity) {
+                groupPreference.setGroupName(groupEntity.getName());
+                groupPreference.setGroupCourse(groupEntity.getCourse());
+                groupPreference.setGroupSpecialtyUuid(groupEntity.getSpecialtyUuid());
+                groupPreference.setGroupUuid(groupEntity.getUuid());
             }
         }));
     }
@@ -128,7 +128,7 @@ public class GroupRepository {
     }
 
     public String getGroupNameByUuid(String groupUuid) {
-        Group group = groupDao.getByUuid(groupUuid);
-        return group.getName();
+        GroupEntity groupEntity = groupDao.getByUuid(groupUuid);
+        return groupEntity.getName();
     }
 }

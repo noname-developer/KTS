@@ -9,17 +9,17 @@ import com.example.kts.data.model.entity.Subject;
 import java.util.List;
 
 @Dao
-public interface SubjectDao extends BaseDao<Subject>{
+public abstract class SubjectDao extends BaseDao<Subject> {
 
     @Query("SELECT * FROM subjects")
-    LiveData<List<Subject>> getAllSubjects();
+    public abstract LiveData<List<Subject>> getAllSubjects();
 
     @Query("DELETE FROM subjects")
-    void clear();
+    abstract void clear();
 
     @Query("SELECT * FROM subjects WHERE def = '1'")
-    List<Subject> getDefaultSubjects();
+    public abstract List<Subject> getDefaultSubjects();
 
     @Query("DELETE FROM subjects WHERE def = '0' AND subjectUuid NOT IN(:availableSubjects)")
-    void deleteMissing(String availableSubjects);
+    public abstract void deleteMissingByGroupUuid(String availableSubjects);
 }

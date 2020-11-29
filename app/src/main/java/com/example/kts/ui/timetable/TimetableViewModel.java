@@ -11,8 +11,8 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 
 import com.example.kts.calendar.model.Week;
-import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
-import com.example.kts.utils.DateFormatUtils;
+import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
+import com.example.kts.utils.DateFormatUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class TimetableViewModel extends AndroidViewModel {
     private final SavedStateHandle savedStateHandle;
     private final TimetableInteractor interactor;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    public final LiveData<List<LessonWithHomeworkAndSubject>> allLessonsForDay;
+    public final LiveData<List<LessonHomeworkSubjectEntities>> allLessonsForDay;
     public final MutableLiveData<String> toolbarName = new MutableLiveData<>();
     public final MutableLiveData<Date> lessonsDate = new MutableLiveData<>();
     public final MutableLiveData<Boolean> calendarShadowVisibility = new MutableLiveData<>(false);
@@ -43,9 +43,9 @@ public class TimetableViewModel extends AndroidViewModel {
     public void onWeekSelect(@NotNull Week week) {
         int selectedDay = week.getSelectedDay();
         if (selectedDay == -1) {
-            toolbarName.setValue(DateFormatUtils.convertDateToStringHidingCurrentYear(week.getDate(3)));
+            toolbarName.setValue(DateFormatUtil.convertDateToStringHidingCurrentYear(week.getDate(3)));
         } else {
-            toolbarName.setValue(DateFormatUtils.convertDateToStringHidingCurrentYear(week.getDate(selectedDay)));
+            toolbarName.setValue(DateFormatUtil.convertDateToStringHidingCurrentYear(week.getDate(selectedDay)));
         }
     }
 
@@ -55,7 +55,7 @@ public class TimetableViewModel extends AndroidViewModel {
 
     public void onDaySelect(Date date) {
         lessonsDate.setValue(date);
-        toolbarName.setValue(DateFormatUtils.convertDateToStringHidingCurrentYear(date));
+        toolbarName.setValue(DateFormatUtil.convertDateToStringHidingCurrentYear(date));
     }
 
     public int getLessonTime() {

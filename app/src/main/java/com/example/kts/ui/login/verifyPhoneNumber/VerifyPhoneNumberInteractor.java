@@ -6,12 +6,12 @@ import android.util.Log;
 import com.example.kts.data.FireEvent;
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.repository.AuthRepository;
+import com.example.kts.data.repository.GroupInfoRepository;
 import com.example.kts.data.repository.GroupRepository;
 import com.example.kts.data.repository.LessonRepository;
 import com.example.kts.data.repository.SubjectRepository;
-import com.example.kts.data.repository.GroupSubjectTeacherRepository;
 import com.example.kts.data.repository.UserRepository;
-import com.example.kts.utils.DateFormatUtils;
+import com.example.kts.utils.DateFormatUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ public class VerifyPhoneNumberInteractor {
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
-    private final GroupSubjectTeacherRepository groupSubjectTeacherRepository;
+    private final GroupInfoRepository groupInfoRepository;
 
     public VerifyPhoneNumberInteractor(Application application) {
         authRepository = new AuthRepository(application);
@@ -43,7 +43,7 @@ public class VerifyPhoneNumberInteractor {
         subjectRepository = new SubjectRepository(application);
         userRepository = new UserRepository(application);
         lessonRepository = new LessonRepository(application);
-        groupSubjectTeacherRepository = new GroupSubjectTeacherRepository(application);
+        groupInfoRepository = new GroupInfoRepository(application);
     }
 
     public Observable<FireEvent<String>> sendUserPhoneNumber(@NotNull User user) {
@@ -65,19 +65,14 @@ public class VerifyPhoneNumberInteractor {
     private @NonNull Completable loadData(@NotNull User user) {
         List<Completable> completableList = new ArrayList<>();
         String groupUuid = user.getGroupUuid();
-        if (!groupUuid.equals("")) {
-            completableList.add(userRepository.loadUsersOfGroup(groupUuid));
-            completableList.add(groupRepository.loadGroupPreference(groupUuid));
-            completableList.add(groupSubjectTeacherRepository.loadSubjectsAndTeachersByGroup(groupUuid));
-        }
-        if (user.getRole().equals(User.STUDENT)
-                || user.getRole().equals(User.DEPUTY_HEADMAN)
-                || user.getRole().equals(User.HEADMAN)) {
-            completableList.add(lessonRepository.loadLessonsInDateRange(getFirstDayOfLastWeek()));
-        } else if (user.getRole().equals(User.TEACHER)
-                || user.getRole().equals(User.HEAD_TEACHER)) {
-            completableList.add(groupSubjectTeacherRepository.loadSubjectsAndGroupsByTeacher(user));
+        if (user.isTeacher()) {
+            completableList.add(groupInfoRepository.loadSubjectsAndGroupsByTeacher(user));
             completableList.add(lessonRepository.loadLessonsByTeacherUserUuidAndStartDate(user.getUuid(), getFirstDayOfLastWeek()));
+        }
+        if (user.hasGroup()) {
+            completableList.add(groupRepository.loadGroupPreference(groupUuid));
+            groupInfoRepository.loadGroupInfo(groupUuid);
+            completableList.add(lessonRepository.loadLessonsInDateRange(getFirstDayOfLastWeek()));
         }
         completableList.add(subjectRepository.loadDefaultSubjects());
 
@@ -89,7 +84,7 @@ public class VerifyPhoneNumberInteractor {
         GregorianCalendar c = new GregorianCalendar(new Locale("ru"));
         c.add(Calendar.WEEK_OF_MONTH, -1);
         c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        return DateFormatUtils.toUtc(DateFormatUtils.removeTime(c.getTime()));
+        return DateFormatUtil.toUtc(DateFormatUtil.removeTime(c.getTime()));
     }
 
     public void tryAuthWithPhoneNumByCode(String code) {

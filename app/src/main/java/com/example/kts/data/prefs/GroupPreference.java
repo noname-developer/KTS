@@ -2,8 +2,6 @@ package com.example.kts.data.prefs;
 
 import android.app.Application;
 
-import com.example.kts.data.model.entity.Group;
-
 import org.jetbrains.annotations.NotNull;
 
 public class GroupPreference extends BaseSharedPreference {

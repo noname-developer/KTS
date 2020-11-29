@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.SingleLiveData;
+import com.example.kts.SingleLiveData;
 
 import java.io.File;
 

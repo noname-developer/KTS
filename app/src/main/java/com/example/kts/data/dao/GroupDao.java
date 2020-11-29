@@ -4,19 +4,19 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.example.kts.data.model.entity.Group;
+import com.example.kts.data.model.entity.GroupEntity;
 
 import java.util.List;
 
 @Dao
-public interface GroupDao extends BaseDao<Group> {
+public abstract class GroupDao extends BaseDao<GroupEntity> {
 
     @Query("SELECT * FROM groups")
-    LiveData<List<Group>> getAllGroups();
+    abstract LiveData<List<GroupEntity>> getAllGroups();
 
     @Query("SELECT * FROM groups WHERE groupUuid=:uuid")
-    Group getByUuid(String uuid);
+    public abstract GroupEntity getByUuid(String uuid);
 
     @Query("DELETE FROM groups WHERE groupUuid NOT IN(:availableGroups)")
-    void deleteMissing(String availableGroups);
+    public abstract void deleteMissing(String availableGroups);
 }

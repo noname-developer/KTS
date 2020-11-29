@@ -2,6 +2,7 @@
   <dictionary name="dench">
     <words>
       <w>interactor</w>
+      <w>upsert</w>
     </words>
   </dictionary>
 </component>

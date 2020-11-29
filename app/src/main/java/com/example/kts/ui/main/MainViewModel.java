@@ -7,9 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
-import com.example.SingleLiveData;
+import com.example.kts.SingleLiveData;
 import com.example.kts.R;
-import com.example.kts.data.model.domain.Lesson;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.Date;

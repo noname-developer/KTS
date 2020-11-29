@@ -10,8 +10,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
-import com.example.SingleLiveData;
+import com.example.kts.SingleLiveData;
 import com.example.kts.data.model.entity.User;
+import com.example.kts.data.repository.GroupInfoRepository;
 import com.example.kts.data.repository.UserRepository;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public static final String FRAGMENT_LIST = "FRAGMENT_LIST";
     private final UserRepository userRepository;
+    private final GroupInfoRepository groupInfoRepository;
     private final List<FragmentType> fragmentTypeList = new ArrayList<>(Collections.singletonList(FragmentType.CHOICE_ROLE));
     private final SavedStateHandle savedStateHandle = new SavedStateHandle();
     public SingleLiveData<Void> backToFragment = new SingleLiveData<>();
@@ -42,6 +44,7 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
         toolbarTitle.setValue("Начало");
         userRepository = new UserRepository(application);
+        groupInfoRepository = new GroupInfoRepository(application);
     }
 
     public void saveList(List<FragmentType> fragmentList) {
@@ -73,7 +76,7 @@ public class LoginViewModel extends AndroidViewModel {
         userRepository.saveGroupUuid(groupUuid);
         currentProgress.setValue(0.5f);
         toolbarTitle.setValue("Найти себя");
-        userAccountList = userRepository.getStudentUsersByGroupUuid(groupUuid);
+        userAccountList = groupInfoRepository.getStudentsOfGroupByGroupUuid(groupUuid);
         addFragment.setValue(FragmentType.CHOICE_USER_ACCOUNT);
         fragmentTypeList.add(FragmentType.CHOICE_USER_ACCOUNT);
     }

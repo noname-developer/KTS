@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.kts.data.model.entity.Homework;
 import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
 import com.example.kts.data.model.entity.Subject;
 
 import org.jetbrains.annotations.Contract;
@@ -17,10 +17,10 @@ import java.util.List;
 
 public class LessonDiffUtilCallback extends DiffUtil.Callback {
 
-    private final List<LessonWithHomeworkAndSubject> oldList;
-    private final List<LessonWithHomeworkAndSubject> newList;
+    private final List<LessonHomeworkSubjectEntities> oldList;
+    private final List<LessonHomeworkSubjectEntities> newList;
 
-    public LessonDiffUtilCallback(List<LessonWithHomeworkAndSubject> oldList, List<LessonWithHomeworkAndSubject> newList) {
+    public LessonDiffUtilCallback(List<LessonHomeworkSubjectEntities> oldList, List<LessonHomeworkSubjectEntities> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
@@ -37,15 +37,15 @@ public class LessonDiffUtilCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        LessonWithHomeworkAndSubject oldLesson = oldList.get(oldItemPosition);
-        LessonWithHomeworkAndSubject newLesson = newList.get(newItemPosition);
+        LessonHomeworkSubjectEntities oldLesson = oldList.get(oldItemPosition);
+        LessonHomeworkSubjectEntities newLesson = newList.get(newItemPosition);
         return oldLesson.getLessonEntity().getUuid().equals(newLesson.getLessonEntity().getUuid());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        LessonWithHomeworkAndSubject oldLesson = oldList.get(oldItemPosition);
-        LessonWithHomeworkAndSubject newLesson = newList.get(newItemPosition);
+        LessonHomeworkSubjectEntities oldLesson = oldList.get(oldItemPosition);
+        LessonHomeworkSubjectEntities newLesson = newList.get(newItemPosition);
         return areLessonsTheSame(oldLesson.getLessonEntity(), newLesson.getLessonEntity()) &&
                 areSubjectsTheSame(oldLesson.getSubject(), newLesson.getSubject()) &&
                 areHomeworkTheSame(oldLesson.getHomework(), newLesson.getHomework());

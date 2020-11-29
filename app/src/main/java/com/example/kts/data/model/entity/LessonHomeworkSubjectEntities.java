@@ -4,16 +4,16 @@ import androidx.room.Embedded;
 import androidx.room.Ignore;
 import androidx.room.Relation;
 
-public class LessonWithHomeworkAndSubject {
+public class LessonHomeworkSubjectEntities {
 
     @Ignore
-    public LessonWithHomeworkAndSubject(LessonEntity lessonEntity, Homework homework, Subject subject) {
+    public LessonHomeworkSubjectEntities(LessonEntity lessonEntity, Homework homework, Subject subject) {
         this.lessonEntity = lessonEntity;
         this.homework = homework;
         this.subject = subject;
     }
 
-    public LessonWithHomeworkAndSubject() {
+    public LessonHomeworkSubjectEntities() {
     }
 
     @Embedded

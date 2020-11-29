@@ -27,7 +27,7 @@ import com.example.kts.LessonTimeCalculator;
 import com.example.kts.R;
 import com.example.kts.data.model.entity.Homework;
 import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonWithHomeworkAndSubject;
+import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
 import com.example.kts.data.model.entity.Subject;
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 
@@ -38,18 +38,18 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonHold
 
     private final SparseBooleanArray expandedItems = new SparseBooleanArray();
     public OnLessonItemClickListener lessonItemClickListener;
-    private List<LessonWithHomeworkAndSubject> lessonList = new ArrayList<>();
+    private List<LessonHomeworkSubjectEntities> lessonList = new ArrayList<>();
     private int lessonTime;
 
     public void setLessonTime(int lessonTime) {
         this.lessonTime = lessonTime;
     }
 
-    public List<LessonWithHomeworkAndSubject> getData() {
+    public List<LessonHomeworkSubjectEntities> getData() {
         return lessonList;
     }
 
-    public void setData(List<LessonWithHomeworkAndSubject> lessonList) {
+    public void setData(List<LessonHomeworkSubjectEntities> lessonList) {
         this.lessonList = lessonList;
     }
 
@@ -108,10 +108,10 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonHold
 
         @Override
         protected void onBind(Object item) {
-            LessonWithHomeworkAndSubject lessonWithHomeworkAndSubject = (LessonWithHomeworkAndSubject) item;
-            LessonEntity lessonEntity = lessonWithHomeworkAndSubject.getLessonEntity();
-            Homework homework = lessonWithHomeworkAndSubject.getHomework();
-            Subject subject = lessonWithHomeworkAndSubject.getSubject();
+            LessonHomeworkSubjectEntities lessonHomeworkSubjectEntities = (LessonHomeworkSubjectEntities) item;
+            LessonEntity lessonEntity = lessonHomeworkSubjectEntities.getLessonEntity();
+            Homework homework = lessonHomeworkSubjectEntities.getHomework();
+            Subject subject = lessonHomeworkSubjectEntities.getSubject();
             tvName.setText(subject.getName());
             tvTime.setText(new LessonTimeCalculator().getCalculatedTime(lessonEntity.getOrder(), lessonTime));
             tvOrder.setText(String.valueOf(lessonEntity.getOrder()));

@@ -5,8 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.kts.data.model.entity.Group;
-
 import org.jetbrains.annotations.NotNull;
 
 public class BaseSharedPreference {
