@@ -52,6 +52,7 @@
             android:paddingStart="26dp"
             android:paddingEnd="26dp"
             android:text="Преподаватель"
+            android:textSize="18sp"
             app:icon="@drawable/ic_teacher"
             app:iconSize="36dp"
             app:iconTint="@null" />
@@ -67,6 +68,7 @@
             android:paddingEnd="26dp"
             android:backgroundTint="@android:color/white"
             android:text="Студент"
+            android:textSize="18sp"
             app:icon="@drawable/ic_student"
             app:iconSize="36dp"
             app:iconTint="@null" />

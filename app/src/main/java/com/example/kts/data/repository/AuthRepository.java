@@ -62,10 +62,10 @@ public class AuthRepository {
                     }
                 };
                 PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                        "+16505553434",        // Phone number to verify
-                        60,                 // Timeout duration
-                        TimeUnit.SECONDS,   // Unit of timeout
-                        TaskExecutors.MAIN_THREAD,               // Activity (for callback binding)
+                        "+16505553434",
+                        60,
+                        TimeUnit.SECONDS,
+                        TaskExecutors.MAIN_THREAD,
                         callbacks);
             }
         });

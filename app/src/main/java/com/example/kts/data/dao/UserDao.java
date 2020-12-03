@@ -22,4 +22,7 @@ public abstract class UserDao extends BaseDao<User> {
 
     @Query("SELECT *  FROM users u JOIN group_subject_teacher gst ON gst.teacherUuid = u.userUuid AND gst.groupUuid = :groupUuid  WHERE u.userUuid NOT IN(:availableTeachers)")
     public abstract List<User> getMissingTeachersByGroupUuid(String availableTeachers, String groupUuid);
+
+    @Query("SELECT * FROM users WHERE role IN('STUDENT','DEPUTY_HEADMAN','HEADMAN') AND userGroupUuid=:groupUuid")
+    public abstract LiveData<List<User>> getStudentsOfGroupByGroupUuid(String groupUuid);
 }

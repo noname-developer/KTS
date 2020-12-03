@@ -2,6 +2,8 @@ package com.example.kts.data.prefs;
 
 import android.app.Application;
 
+import com.example.kts.data.model.entity.GroupEntity;
+
 import org.jetbrains.annotations.NotNull;
 
 public class GroupPreference extends BaseSharedPreference {
@@ -45,5 +47,12 @@ public class GroupPreference extends BaseSharedPreference {
 
     public void setGroupSpecialtyUuid(String groupSpecialtyUuid) {
         setValue(GROUP_SPECIALTY_UUID, groupSpecialtyUuid);
+    }
+
+    public void setGroup(@NotNull GroupEntity group) {
+        setGroupName(group.getName());
+        setGroupCourse(group.getCourse());
+        setGroupSpecialtyUuid(group.getSpecialtyUuid());
+        setGroupUuid(group.getUuid());
     }
 }

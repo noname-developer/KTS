@@ -88,19 +88,12 @@ public class GroupRepository {
             public void onComplete(@androidx.annotation.NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot snapshot : task.getResult()) {
-                        saveGroupPreference(snapshot.toObject(GroupEntity.class));
+                        groupPreference.setGroup(snapshot.toObject(GroupEntity.class));
                     }
                     emitter.onComplete();
                 } else {
                     emitter.onError(task.getException());
                 }
-            }
-
-            private void saveGroupPreference(@NotNull GroupEntity groupEntity) {
-                groupPreference.setGroupName(groupEntity.getName());
-                groupPreference.setGroupCourse(groupEntity.getCourse());
-                groupPreference.setGroupSpecialtyUuid(groupEntity.getSpecialtyUuid());
-                groupPreference.setGroupUuid(groupEntity.getUuid());
             }
         }));
     }

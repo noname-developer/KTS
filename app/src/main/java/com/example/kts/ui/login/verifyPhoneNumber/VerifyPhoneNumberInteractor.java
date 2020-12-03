@@ -71,8 +71,10 @@ public class VerifyPhoneNumberInteractor {
         }
         if (user.hasGroup()) {
             completableList.add(groupRepository.loadGroupPreference(groupUuid));
-            groupInfoRepository.loadGroupInfo(groupUuid);
             completableList.add(lessonRepository.loadLessonsInDateRange(getFirstDayOfLastWeek()));
+            if (user.isCurator()) {
+                groupInfoRepository.loadGroupInfo(groupUuid);
+            }
         }
         completableList.add(subjectRepository.loadDefaultSubjects());
 

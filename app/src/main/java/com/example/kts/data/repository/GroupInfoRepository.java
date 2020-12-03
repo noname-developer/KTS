@@ -1,12 +1,10 @@
 package com.example.kts.data.repository;
 
 import android.app.Application;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.GroupDao;
@@ -14,21 +12,19 @@ import com.example.kts.data.dao.GroupTeacherSubjectDao;
 import com.example.kts.data.dao.SpecialtyDao;
 import com.example.kts.data.dao.SubjectDao;
 import com.example.kts.data.dao.UserDao;
-import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.data.model.entity.GroupSubjectTeacherCrossRef;
 import com.example.kts.data.model.entity.Subject;
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.model.firestore.GroupDoc;
+import com.example.kts.data.prefs.GroupPreference;
 import com.example.kts.data.prefs.TimestampPreference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Source;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +47,7 @@ public class GroupInfoRepository {
     private final GroupDao groupDao;
     private final SpecialtyDao specialtyDao;
     private final TimestampPreference timestampPreference;
+    private final GroupPreference groupPreference;
     private final Map<String, ListenerRegistration> registrationMap = new HashMap<>();
 
     public GroupInfoRepository(Application application) {
@@ -62,6 +59,7 @@ public class GroupInfoRepository {
         groupDao = dataBase.groupDao();
         specialtyDao = dataBase.specialtyDao();
         timestampPreference = new TimestampPreference(application);
+        groupPreference = new GroupPreference(application);
         groupsRef = firestore.collection("Groups");
     }
 
@@ -87,43 +85,50 @@ public class GroupInfoRepository {
 //        }));
 //    }
 
-    private void insertTeachersAndSubjectsOfGroup(@NotNull GroupDoc groupDoc) {
+    private void upsertTeachersAndSubjectsOfGroup(@NotNull GroupDoc groupDoc) {
         List<User> teachers = groupDoc.getTeacherUsers().stream()
                 .filter(distinctByKey(User::getUuid))
                 .collect(Collectors.toList());
-        userDao.insert(teachers);
         List<Subject> subjects = groupDoc.getSubjects().stream()
                 .filter(distinctByKey(Subject::getUuid))
                 .collect(Collectors.toList());
-        subjectDao.insert(subjects);
+        userDao.insert(
+                Stream.concat(teachers.stream(), groupDoc.getUsers()
+                        .stream())
+                        .collect(Collectors.toList())
+        );
+        subjectDao.upsert(subjects);
+        groupDao.upsert(groupDoc.toGroupEntity());
+        groupPreference.setGroup(groupDoc.toGroupEntity());
         Iterator<Subject> subjectIterator = groupDoc.getSubjects().iterator();
         Iterator<User> userIterator = groupDoc.getTeacherUsers().iterator();
-        groupDao.insert(groupDoc.toGroupEntity());
         while (subjectIterator.hasNext() && userIterator.hasNext()) {
             Subject subject = subjectIterator.next();
             User teacher = userIterator.next();
-            groupTeacherSubjectCrossRefDao.insert(new GroupSubjectTeacherCrossRef(groupDoc.getUuid(), subject.getUuid(), teacher.getUuid()));
+            groupTeacherSubjectCrossRefDao.upsert(new GroupSubjectTeacherCrossRef(groupDoc.getUuid(), subject.getUuid(), teacher.getUuid()));
         }
     }
 
-    private void upsertGroupAndSubjectsOfTeacher(@NotNull GroupDoc groupDoc, String teacherUuid) {
-        List<Subject> subjects = getSubjectsByTeacher(groupDoc, teacherUuid);
-        subjectDao.upsert(subjects);
-        groupDao.upsert(groupDoc.toGroupEntity());
-        specialtyDao.upsert(groupDoc.getSpecialty());
-        for (Subject subject : subjects) {
+    private void upsertGroupsAndSubjectsOfTeacher(@NotNull List<GroupDoc> groupDocs, String teacherUuid) {
+        for (GroupDoc groupDoc : groupDocs) {
+            List<Subject> subjects = getSubjectsByTeacher(groupDoc, teacherUuid);
+            subjectDao.upsert(subjects);
+            groupDao.upsert(groupDoc.toGroupEntity());
+            specialtyDao.upsert(groupDoc.getSpecialty());
             String groupUuid = groupDoc.getUuid();
-            String subjectUuid = subject.getUuid();
-            groupTeacherSubjectCrossRefDao.upsert(new GroupSubjectTeacherCrossRef(groupUuid, subjectUuid, teacherUuid));
+            for (Subject subject : subjects) {
+                String subjectUuid = subject.getUuid();
+                groupTeacherSubjectCrossRefDao.upsert(new GroupSubjectTeacherCrossRef(groupUuid, subjectUuid, teacherUuid));
+            }
         }
     }
 
     @NotNull
-    private List<Subject> getSubjectsByTeacher(@NotNull GroupDoc groupDoc, String userUuid) {
+    private List<Subject> getSubjectsByTeacher(@NotNull GroupDoc groupDoc, String teacherUuid) {
         return groupDoc.getSubjects().stream()
                 .filter(subject -> {
                     int i = groupDoc.getSubjects().indexOf(subject);
-                    return groupDoc.getTeacherUsers().get(i).getUuid().equals(userUuid);
+                    return groupDoc.getTeacherUsers().get(i).getUuid().equals(teacherUuid);
                 })
                 .collect(Collectors.toList());
     }
@@ -133,10 +138,7 @@ public class GroupInfoRepository {
                 .get()
                 .addOnSuccessListener(snapshots -> {
                     List<GroupDoc> groupDocs = snapshots.toObjects(GroupDoc.class);
-                    for (int i = 0; i < groupDocs.size(); i++) {
-                        GroupDoc groupDoc = groupDocs.get(i);
-                        upsertGroupAndSubjectsOfTeacher(groupDoc, teacherUser.getUuid());
-                    }
+                    upsertGroupsAndSubjectsOfTeacher(groupDocs, teacherUser.getUuid());
                     timestampPreference.setTimestampGroups(System.currentTimeMillis());
                     emitter.onComplete();
                 })
@@ -150,44 +152,23 @@ public class GroupInfoRepository {
         registrationMap.put(groupUuid, getUpdatedGroupByUuidListener(groupUuid, new Date(timestamp)));
     }
 
-    public void getUpdatedGroupsByTeacher(@NotNull User teacherUser, long timestamp) {
+    public void getUpdatedGroupsByTeacherAndTimestamp(@NotNull User teacherUser, long timestamp) {
         registrationMap.put(teacherUser.getUuid(), getUpdatedGroupsByTeacherListener(teacherUser, new Date(timestamp)));
     }
 
     @NotNull
     private ListenerRegistration getUpdatedGroupsByTeacherListener(@NotNull User teacher, Date timestamp) {
         return groupsRef.whereArrayContains("teacherUsers", teacher.toMap())
-//                .whereGreaterThan("timestamp", timestamp)
+                .whereGreaterThan("timestamp", timestamp)
                 .addSnapshotListener((snapshots, error) -> {
+                    if (error != null) {
+                        Log.d("lol", "getUpdatedGroupsByTeacherListener: ",error);
+                    }
                     if (!snapshots.isEmpty()) {
-                        List<GroupDoc> groupDocList = snapshots.toObjects(GroupDoc.class);
-
-                        List<String> availableGroupUuidList = new ArrayList<>();
-                        List<String> availableSubjectUuidList = new ArrayList<>();
-                        List<String> availableSpecialtyUuidList = new ArrayList<>();
+                        List<GroupDoc> groupDocs = snapshots.toObjects(GroupDoc.class);
                         String teacherUserUuid = teacher.getUuid();
-                        for (int i = 0; i < groupDocList.size(); i++) {
-                            GroupDoc groupDoc = groupDocList.get(i);
-                            availableSpecialtyUuidList.add(groupDoc.getSpecialtyUuid());
-                            availableSubjectUuidList.addAll(getSubjectsByTeacher(groupDoc, teacherUserUuid).stream()
-                                    .map(Subject::getUuid)
-                                    .collect(Collectors.toList()));
-                            availableGroupUuidList.add(groupDoc.getUuid());
-                            String groupUuid = groupDoc.getUuid();
-                            GroupEntity localGroupEntity = groupDao.getByUuid(groupUuid);
-                            if (localGroupEntity == null) {
-                                groupDao.insert(groupDoc.toGroupEntity());
-                            }
-                            upsertGroupAndSubjectsOfTeacher(groupDoc, teacherUserUuid);
-                            timestampPreference.setTimestampGroups(System.currentTimeMillis());
-                        }
-
-                        String availableGroups = TextUtils.join(",", availableGroupUuidList);
-                        String availableSubjects = TextUtils.join(",", availableSubjectUuidList);
-                        String availableSpecialties = TextUtils.join(",", availableSpecialtyUuidList);
-                        groupDao.deleteMissing(availableGroups);
-                        subjectDao.deleteMissingByGroupUuid(availableSubjects);
-                        specialtyDao.deleteMissing(availableSpecialties);
+                        upsertGroupsAndSubjectsOfTeacher(groupDocs, teacherUserUuid);
+                        timestampPreference.setTimestampGroups(System.currentTimeMillis());
                     }
                 });
     }
@@ -195,42 +176,17 @@ public class GroupInfoRepository {
     @NotNull
     private ListenerRegistration getUpdatedGroupByUuidListener(String groupUuid, Date timestamp) {
         return groupsRef.whereEqualTo("uuid", groupUuid)
-//                .whereGreaterThan("timestamp", timestamp)
+                .whereGreaterThan("timestamp", timestamp)
                 .addSnapshotListener((snapshots, error) -> {
                     if (error != null) {
                         Log.d("lol", "setGroupByUuidListener err: ", error);
                     }
                     if (!snapshots.isEmpty()) {
                         GroupDoc groupDoc = snapshots.toObjects(GroupDoc.class).get(0);
-
-                        deleteMissingTeachersOfGroup(groupUuid, groupDoc);
-                        deleteMissingSubjectsOfGroup(groupUuid, groupDoc);
-
-                        insertTeachersAndSubjectsOfGroup(groupDoc);
+                        upsertTeachersAndSubjectsOfGroup(groupDoc);
                         timestampPreference.setTimestampGroups(groupDoc.getTimestamp().getTime());
                     }
                 });
-    }
-
-    private void deleteMissingTeachersOfGroup(String groupUuid, GroupDoc groupDoc) {
-        List<String> availableTeacherUserUuidList = groupDoc.getTeacherUsers().stream()
-                .map(User::getUuid)
-                .collect(Collectors.toList());
-        String availableTeachers = TextUtils.join("','", availableTeacherUserUuidList);
-        List<User> missingTeachers = userDao.getMissingTeachersByGroupUuid(availableTeachers, groupUuid);
-        for (User missingTeacher : missingTeachers) {
-            groupTeacherSubjectCrossRefDao.deleteByMissingTeacherAndGroup(missingTeacher.getUuid(), groupUuid);
-        }
-        userDao.delete(missingTeachers);
-    }
-
-    private void deleteMissingSubjectsOfGroup(String groupUuid, GroupDoc groupDoc) {
-        List<String> availableSubjectUuidList = groupDoc.getSubjects().stream()
-                .map(Subject::getUuid)
-                .collect(Collectors.toList());
-        String availableSubjects = TextUtils.join("','", availableSubjectUuidList);
-//        List<Subject> missingSubjects = subjectDao.deleteMissingByGroupUuid();
-        subjectDao.deleteMissingByGroupUuid(availableSubjects);
     }
 
     public void removeRegistrations() {
@@ -238,49 +194,26 @@ public class GroupInfoRepository {
     }
 
     public LiveData<List<User>> getStudentsOfGroupByGroupUuid(String groupUuid) {
-        MutableLiveData<List<User>> data = new MutableLiveData<>();
-        groupsRef.whereEqualTo("uuid", groupUuid).get(Source.CACHE)
-                .addOnSuccessListener(snapshots -> {
-                    DocumentSnapshot snapshot = snapshots.getDocuments().get(0);
-                    GroupDoc groupDoc = snapshot.toObject(GroupDoc.class);
-                    List<User> students = groupDoc.getUsers();
-                    students.removeIf(user -> !user.isStudent());
-                    data.setValue(students);
-                });
-        return data;
+        if (groupDao.getByUuid(groupUuid) == null) {
+            loadGroupInfo(groupUuid);
+        }
+        return userDao.getStudentsOfGroupByGroupUuid(groupUuid);
     }
 
     public void loadGroupInfo(String groupUuid) {
         if (groupDao.getByUuid(groupUuid) == null) {
-            groupsRef.whereEqualTo("uuid", groupUuid).get(Source.SERVER)
+            groupsRef.whereEqualTo("uuid", groupUuid)
+                    .get()
                     .addOnSuccessListener(snapshots -> {
                         DocumentSnapshot snapshot = snapshots.getDocuments().get(0);
                         GroupDoc groupDoc = snapshot.toObject(GroupDoc.class);
                         groupDao.insert(groupDoc.toGroupEntity());
                         specialtyDao.insert(groupDoc.getSpecialty());
-                        loadSubjectsWithTeacherOfGroup(groupDoc);
+                        upsertTeachersAndSubjectsOfGroup(groupDoc);
                         timestampPreference.setTimestampGroups(System.currentTimeMillis());
                     })
                     .addOnFailureListener(e -> Log.d("lol", "loadGroupInfo: ", e));
         }
-    }
-
-    private void loadSubjectsWithTeacherOfGroup(@NotNull GroupDoc groupDoc) {
-        userDao.insert(
-                Stream.concat(groupDoc.getTeacherUsers().stream(), groupDoc.getUsers()
-                        .stream())
-                        .collect(Collectors.toList())
-        );
-        subjectDao.insert(groupDoc.getSubjects());
-        Iterator<Subject> subjectIterator = groupDoc.getSubjects().iterator();
-        Iterator<User> teacherIterator = groupDoc.getTeacherUsers().iterator();
-        List<GroupSubjectTeacherCrossRef> groupSubjectTeacherCrossRefs = new ArrayList<>();
-        while (subjectIterator.hasNext() && teacherIterator.hasNext()) {
-            String subjectUuid = subjectIterator.next().getUuid();
-            String teacherUuid = teacherIterator.next().getUuid();
-            groupSubjectTeacherCrossRefs.add(new GroupSubjectTeacherCrossRef(groupDoc.getUuid(), subjectUuid, teacherUuid));
-        }
-        groupTeacherSubjectCrossRefDao.insert(groupSubjectTeacherCrossRefs);
     }
 
     public boolean isGroupHasSuchTeacher(String userUuid, String groupUuid) {

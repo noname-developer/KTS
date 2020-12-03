@@ -12,7 +12,7 @@ public class TimestampPreference extends BaseSharedPreference {
     public static final String TIMESTAMP_LESSON_TIME = "TIMESTAMP_LESSON_TIME";
     public static final String TIMESTAMP_GROUPS = "TIMESTAMP_GROUPS";
 
-    private static final long GROUP_HOURS_TIMEOUT = 4;
+    public static final int GROUP_HOURS_TIMEOUT = 3;
 
     public TimestampPreference(@NotNull Application application) {
         super(application, "Timestamp");

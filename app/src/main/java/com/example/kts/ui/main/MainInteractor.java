@@ -4,9 +4,12 @@ import android.app.Application;
 
 import com.example.kts.data.model.entity.User;
 import com.example.kts.data.prefs.TimestampPreference;
-import com.example.kts.data.repository.GroupRepository;
 import com.example.kts.data.repository.GroupInfoRepository;
+import com.example.kts.data.repository.GroupRepository;
 import com.example.kts.data.repository.UserRepository;
+import com.example.kts.utils.TimestampUtil;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainInteractor {
 
@@ -23,12 +26,22 @@ public class MainInteractor {
         User user = userRepository.getUser();
 
         if (user.isTeacher()) {
-            groupInfoRepository.getUpdatedGroupsByTeacher(user, timestampPreference.getTimestampGroups());
+//            if (groupsWereUpdateLongAgo())
+                groupInfoRepository.getUpdatedGroupsByTeacherAndTimestamp(user, timestampPreference.getTimestampGroups());
         }
         if (user.isStudent() || user.isCurator() && !groupInfoRepository.isGroupHasSuchTeacher(user.getUuid(), user.getGroupUuid())) {
-            groupInfoRepository.getUpdatedGroupByUuidAndTimestamp(groupRepository.getGroupUuid(), timestampPreference.getTimestampGroups());
+//            if (groupsWereUpdateLongAgo())
+                groupInfoRepository.getUpdatedGroupByUuidAndTimestamp(groupRepository.getGroupUuid(), timestampPreference.getTimestampGroups());
         }
     }
+
+    private boolean groupsWereUpdateLongAgo() {
+        return TimestampUtil.isDateDiffsGreaterThanOrEqualTo(timestampPreference.getTimestampGroups(),
+                System.currentTimeMillis(),
+                TimestampPreference.GROUP_HOURS_TIMEOUT,
+                TimeUnit.HOURS);
+    }
+
     public void removeRegistrations() {
         groupInfoRepository.removeRegistrations();
     }
