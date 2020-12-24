@@ -44,7 +44,7 @@ public class SearchBar2 extends LinearLayout {
     private View root;
     private TextView textView;
     private EditText editText;
-//    private ImageView btnBack;
+    private ImageView btnBack;
     private CardView cardView;
     private boolean expanded;
     private InputMethodManager lManager;
