@@ -3,7 +3,7 @@ package com.example.kts.data.dao;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.example.kts.data.model.entity.Specialty;
+import com.example.kts.data.model.sqlite.Specialty;
 
 @Dao
 public abstract class SpecialtyDao extends BaseDao<Specialty> {

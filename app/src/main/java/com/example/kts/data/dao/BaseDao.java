@@ -13,21 +13,27 @@ import java.util.List;
 @Dao
 public abstract class BaseDao<T> {
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     public abstract long insert(T obj);
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     public abstract List<Long> insert(List<T> obj);
 
+    @Transaction
     @Update
     public abstract void update(T obj);
 
+    @Transaction
     @Update
     public abstract void update(List<T> obj);
 
+    @Transaction
     @Delete
     public abstract void delete(T obj);
 
+    @Transaction
     @Delete
     public abstract void delete(List<T> obj);
 

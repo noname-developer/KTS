@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:orientation="vertical"
     android:padding="?dialogPreferredPadding">
 
     <LinearLayout
         android:id="@+id/layout_subject_content"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -20,33 +20,35 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginTop="2dp"
-            android:background="@color/red"
-            android:layout_marginEnd="12dp"/>
+            android:layout_marginEnd="12dp"
+            app:srcCompat="@drawable/ic_subject" />
 
         <TextView
             android:id="@+id/textView_subject_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:textSize="16dp"
+            android:gravity="center_vertical"
             android:text="Предмет"
-            app:drawableEndCompat="@drawable/ic_group" />
+            android:textSize="16dp"
+            app:drawableEndCompat="@drawable/ic_edit" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:visibility="gone"
             android:id="@+id/textInputLayout_subject_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:endIconDrawable="@drawable/ic_home"
-            app:endIconMode="custom"
-            android:hint="Предмет">
+            android:hint="Предмет"
+            android:visibility="gone"
+            app:endIconDrawable="@drawable/ic_arrow_left"
+            app:endIconMode="custom">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editText_subject_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -54,52 +56,46 @@
         android:id="@+id/layout_teacher_content"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_below="@+id/layout_subject_content"
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
-        android:layout_below="@+id/layout_subject_content"
         android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardview"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            app:cardCornerRadius="21dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="12dp"
-            app:cardElevation="0dp">
-
-            <ImageView
+            <com.example.kts.CircleImageView
                 android:id="@+id/imageView_teacher_avatar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/red" />
-        </androidx.cardview.widget.CardView>
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="12dp"
+                app:srcCompat="@drawable/ic_teacher" />
 
         <TextView
             android:id="@+id/textView_teacher_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:textSize="16sp"
+            android:gravity="center_vertical"
             android:text="Преподаватель"
-            app:drawableEndCompat="@drawable/ic_group" />
+            android:textSize="16sp"
+            app:drawableEndCompat="@drawable/ic_edit" />
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:visibility="gone"
             android:id="@+id/textInputLayout_teacher_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:endIconDrawable="@drawable/ic_home"
-            app:endIconMode="custom"
-            android:hint="Преподаватель">
+            android:hint="Преподаватель"
+            android:visibility="gone"
+            app:endIconDrawable="@drawable/ic_arrow_left"
+            app:endIconMode="custom">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editText_teacher_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

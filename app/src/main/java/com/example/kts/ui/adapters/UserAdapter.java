@@ -7,110 +7,103 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.kts.R;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.DomainModel;
+import com.example.kts.data.model.sqlite.UserEntity;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public class UserAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+import static com.example.kts.ui.adapters.BaseViewHolder.TYPE_HEADER;
+import static com.example.kts.ui.adapters.BaseViewHolder.TYPE_VIEW;
 
-    public static final int TYPE_HEADER = 1;
-    public static final int TYPE_USER_VIEW = 0;
-    private List<User> userList = new ArrayList<>();
+public class UserAdapter extends ListAdapter<DomainModel, BaseViewHolder<DomainModel>> {
+
+    private static final DiffUtil.ItemCallback<DomainModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<DomainModel>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull DomainModel oldItem, @NonNull DomainModel newItem) {
+            return oldItem.getUuid().equals(newItem.getUuid());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull DomainModel oldItem, @NonNull DomainModel newItem) {
+            if (oldItem instanceof UserEntity && newItem instanceof UserEntity) {
+                return ((UserEntity) oldItem).getTimestamp().equals(((UserEntity) newItem).getTimestamp());
+            }
+            return false;
+        }
+    };
     private OnItemClickListener userItemClickListener;
+    private OnItemLongClickListener userItemLongClickListener;
+
+    public UserAdapter() {
+        super(DIFF_CALLBACK);
+    }
 
     public void setUserItemClickListener(OnItemClickListener userItemClickListener) {
         this.userItemClickListener = userItemClickListener;
     }
 
-    public List<User> getDate() {
-        return userList;
-    }
-
-    public void setData(List<User> userList) {
-        this.userList = userList;
+    public void setUserItemLongClickListener(OnItemLongClickListener userItemLongClickListener) {
+        this.userItemLongClickListener = userItemLongClickListener;
     }
 
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return viewType == TYPE_USER_VIEW
-                ? new UserHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false))
-                : new UsersHeaderHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false));
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return viewType == TYPE_VIEW
+                ? new UserHolder(inflater.inflate(R.layout.item_user, parent, false), userItemClickListener, userItemLongClickListener)
+                : new HeaderHolder(inflater.inflate(R.layout.item_header, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        holder.onBind(userList.get(position));
-        holder.setListener(userItemClickListener);
-    }
-
-    @Override
-    public int getItemCount() {
-        return userList.size();
+    public void onBindViewHolder(@NonNull BaseViewHolder<DomainModel> holder, int position) {
+        holder.onBind(getItem(position));
     }
 
     @Override
     public int getItemViewType(int position) {
-        return userList.get(position).getSecondName() == null ? TYPE_HEADER : TYPE_USER_VIEW;
+        return getItem(position).getType() == TYPE_HEADER ? TYPE_HEADER : TYPE_VIEW;
     }
 
-    static class UserHolder extends BaseViewHolder {
+    static class UserHolder extends BaseViewHolder<UserEntity> {
 
         private final ImageView ivAvatar;
         private final TextView tvName;
         private final TextView tvAdditionally;
 
-        public UserHolder(@NonNull View itemView) {
-            super(itemView);
+        public UserHolder(@NonNull View itemView, OnItemClickListener clickListener, OnItemLongClickListener longClickListener) {
+            super(itemView, clickListener, longClickListener);
             ivAvatar = itemView.findViewById(R.id.imageView_subject_icon);
             tvName = itemView.findViewById(R.id.textView_subject_name);
             tvAdditionally = itemView.findViewById(R.id.textView_teacher_fullName);
         }
 
         @Override
-        void onBind(Object item) {
-            User user = (User) item;
+        protected void onBind(@NotNull UserEntity userEntity) {
 
             Glide.with(itemView.getContext())
-                    .load(user.getPhotoUrl())
+                    .load(userEntity.getPhotoUrl())
                     .transition(DrawableTransitionOptions.withCrossFade(100))
                     .into(ivAvatar);
 
-            tvName.setText(String.format("%s %s", user.getFirstName(), user.getSecondName()));
+            tvName.setText(String.format("%s %s", userEntity.getFirstName(), userEntity.getSecondName()));
             tvAdditionally.setVisibility(View.VISIBLE);
-            switch (user.getRole()) {
-                case User.DEPUTY_HEADMAN:
+            switch (userEntity.getRole()) {
+                case UserEntity.DEPUTY_HEADMAN:
                     tvAdditionally.setText("Зам. старосты");
                     break;
-                case User.HEADMAN:
+                case UserEntity.HEADMAN:
                     tvAdditionally.setText("Староста");
                     break;
                 default:
                     tvAdditionally.setVisibility(View.GONE);
             }
-            itemView.setOnClickListener(view -> getListener().onItemClick(getAdapterPosition()));
-        }
-
-    }
-
-    static class UsersHeaderHolder extends BaseViewHolder {
-
-        private final TextView tvHeader;
-
-        public UsersHeaderHolder(@NonNull View itemView) {
-            super(itemView);
-            tvHeader = itemView.findViewById(R.id.textView_header);
-        }
-
-        @Override
-        void onBind(Object item) {
-            tvHeader.setText(((User) item).getFirstName());
         }
     }
 }

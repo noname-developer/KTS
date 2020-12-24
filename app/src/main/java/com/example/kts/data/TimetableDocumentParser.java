@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.example.kts.data.model.domain.GroupWeekLessons;
 import com.example.kts.data.model.domain.Lesson;
-import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.Subject;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.example.kts.data.model.firestore.GroupDoc;
 import com.example.kts.utils.DateFormatUtil;
 
@@ -81,20 +81,19 @@ public class TimetableDocumentParser {
 
     @NotNull
     private List<Lesson> getLessonsOfGroup() {
-        List<Lesson> weekLessons = new ArrayList<>();
+        List<Lesson> weekLesson = new ArrayList<>();
         currentRow = 3;
         for (int i = 0; i < STUDY_DAY_COUNT; i++) {
             String dateInCell = table.getRow(currentRow).getCell(0).getText();
-            Log.d("lol", "getLessonsOfGroup: " + dateInCell);
             currentRow++;
             String date = dateInCell.substring(dateInCell.lastIndexOf(" ") + 1);
             if (DateFormatUtil.validateDateOfString(date, DateFormatUtil.DD_MM_YY)) {
-                weekLessons.addAll(getLessonsOfTheDay(date));
+                weekLesson.addAll(getLessonsOfTheDay(date));
             } else {
                 //todo добавить ошибку с датой
             }
         }
-        return weekLessons;
+        return weekLesson;
     }
 
     @NotNull
@@ -150,9 +149,9 @@ public class TimetableDocumentParser {
             room = null;
         }
         Subject subject = !subjectName.isEmpty() ? findSubjectByName(subjectName) : null;
-        List<User> teacherUsers = subject != null ? findTeacherUsersBySubjectIndexes(getIndexListOfSubjectUuid(subject.getUuid())) : null;
+        List<UserEntity> teachers = subject != null ? findTeachersBySubjectIndexes(getIndexListOfSubjectUuid(subject.getUuid())) : null;
         Log.d("lol", "getLessonsOfGroup: " + order + " " + contentOfSubjectAndRoomCell);
-        return new Lesson(room, subject, order, teacherUsers, date);
+        return new Lesson(room, subject, order, teachers, date);
     }
 
     @NotNull
@@ -182,12 +181,12 @@ public class TimetableDocumentParser {
 
     @NotNull
     @Contract(pure = true)
-    private List<User> findTeacherUsersBySubjectIndexes(@NotNull List<Integer> indexes) {
-        List<User> teacherUsers = new ArrayList<>();
+    private List<UserEntity> findTeachersBySubjectIndexes(@NotNull List<Integer> indexes) {
+        List<UserEntity> teachers = new ArrayList<>();
         for (Integer index : indexes) {
-            teacherUsers.add(groupDoc.getTeacherUsers().get(index));
+            teachers.add(groupDoc.getTeachers().get(index));
         }
-        return teacherUsers;
+        return teachers;
     }
 
     @NotNull

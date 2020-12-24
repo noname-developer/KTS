@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kts.R;
 import com.example.kts.RxBusChoiceOfGroup;
-import com.example.kts.ui.adapters.ItemPreferenceAdapter;
+import com.example.kts.ui.adapters.PreferenceAdapter;
 import com.example.kts.ui.login.choiceOfGroup.ChoiceOfGroupSharedViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,18 +29,18 @@ import static com.example.kts.data.prefs.GroupPreference.GROUP_UUID;
 
 public class AdminPanelFragment extends Fragment {
 
-    private ItemPreferenceAdapter adapter;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private PreferenceAdapter adapter;
     private AdminPanelViewModel viewModel;
     private ChoiceOfGroupSharedViewModel choiceOfGroupSharedViewModel;
     private NavController navController;
     private RecyclerView recyclerView;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RxBusChoiceOfGroup rxBusChoiceOfGroup;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin_panel_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_admin_panel, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerview_preference);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -52,8 +52,8 @@ public class AdminPanelFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(AdminPanelViewModel.class);
         navController = Navigation.findNavController(view);
-        adapter = new ItemPreferenceAdapter();
-        adapter.setData(viewModel.getItemList());
+        adapter = new PreferenceAdapter();
+        adapter.submitList(viewModel.getItemList());
         adapter.setItemClickListener(position -> viewModel.onItemClick(position));
         recyclerView.setAdapter(adapter);
         choiceOfGroupSharedViewModel = new ViewModelProvider(this).get(ChoiceOfGroupSharedViewModel.class);
@@ -69,8 +69,11 @@ public class AdminPanelFragment extends Fragment {
                     }));
             navController.navigate(R.id.action_menu_admin_panel_to_choiceOfGroupFragment);
         });
-        viewModel.openTimetableEditorFragment.observe(getViewLifecycleOwner(), (Observer<Object>) o ->
+        viewModel.openTimetableEditor.observe(getViewLifecycleOwner(), (Observer<Object>) o ->
                 navController.navigate(R.id.action_menu_admin_panel_to_timetableEditorFragment));
+
+        viewModel.openUserFinder.observe(getViewLifecycleOwner(), (Observer<Object>) o ->
+                navController.navigate(R.id.action_menu_admin_panel_to_finderFragment2));
     }
 
     @Override

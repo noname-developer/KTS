@@ -1,44 +1,42 @@
 package com.example.kts.data.model.firestore;
 
+import com.example.kts.data.model.Model;
 import com.example.kts.data.model.domain.GroupInfo;
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.Specialty;
-import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.User;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import org.jetbrains.annotations.NotNull;
+import com.example.kts.data.model.sqlite.GroupEntity;
+import com.example.kts.data.model.sqlite.Specialty;
+import com.example.kts.data.model.sqlite.Subject;
+import com.example.kts.data.model.sqlite.UserEntity;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-public class GroupDoc {
+public class GroupDoc implements Model {
 
     private int course;
     private String name;
     private String specialtyUuid;
     private List<Subject> subjects;
-    private List<User> teacherUsers;
-    private List<User> users;
+    private List<UserEntity> teachers;
+    private List<UserEntity> users;
     private String uuid;
     private Date timestamp;
     private Specialty specialty;
 
     public GroupDoc() {
     }
-    public GroupDoc(String name, int course, List<Subject> subjects, List<User> teacherUsers) {
+
+    public GroupDoc(String name, int course, List<Subject> subjects, List<UserEntity> teachers) {
         this.name = name;
         this.course = course;
         this.subjects = subjects;
-        this.teacherUsers = teacherUsers;
+        this.teachers = teachers;
     }
 
-    public List<User> getUsers() {
+    public List<UserEntity> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
 
@@ -74,12 +72,12 @@ public class GroupDoc {
         this.subjects = subjects;
     }
 
-    public List<User> getTeacherUsers() {
-        return teacherUsers;
+    public List<UserEntity> getTeachers() {
+        return teachers;
     }
 
-    public void setTeacherUsers(List<User> teacherUsers) {
-        this.teacherUsers = teacherUsers;
+    public void setTeachers(List<UserEntity> teachers) {
+        this.teachers = teachers;
     }
 
     public String getUuid() {
@@ -117,7 +115,7 @@ public class GroupDoc {
     public GroupInfo toGroupInfo() {
         GroupInfo groupInfo = new GroupInfo(course, name, specialty, uuid);
         for (Subject subject : subjects) {
-            groupInfo.addSubjectTeacher(subject, teacherUsers.get(subjects.indexOf(subject)));
+            groupInfo.addSubjectTeacher(subject, teachers.get(subjects.indexOf(subject)), getUuid());
         }
         return groupInfo;
     }

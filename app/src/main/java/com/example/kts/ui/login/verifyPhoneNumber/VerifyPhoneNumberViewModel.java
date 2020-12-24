@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.kts.SingleLiveData;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
@@ -33,8 +33,8 @@ public class VerifyPhoneNumberViewModel extends AndroidViewModel {
         interactor = new VerifyPhoneNumberInteractor(application);
     }
 
-    void onCodeClick(@NotNull User user) {
-        Disposable subscribe = interactor.sendUserPhoneNumber(user).subscribeOn(Schedulers.io())
+    void onCodeClick(@NotNull UserEntity userEntity) {
+        Disposable subscribe = interactor.sendUserPhoneNumber(userEntity).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
                     switch (event.getStatus()) {

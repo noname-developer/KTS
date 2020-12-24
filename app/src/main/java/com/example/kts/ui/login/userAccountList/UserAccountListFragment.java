@@ -28,7 +28,7 @@ public class UserAccountListFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_group_users, container, false);
         recyclerView = root.findViewById(R.id.recyclerview_users);
         adapter = new UserAdapter();
-        adapter.setUserItemClickListener(position -> loginViewModel.onUserItemClick(adapter.getDate().get(position)));
+        adapter.setUserItemClickListener(position -> loginViewModel.onUserItemClick(position));
         return root;
     }
 
@@ -39,9 +39,9 @@ public class UserAccountListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
         loginViewModel.userAccountList.observe(getViewLifecycleOwner(), userList -> {
-            adapter.setData(userList);
+            adapter.submitList(userList);
             adapter.notifyItemRangeChanged(0, userList.size());
-            Toast.makeText(getActivity(), "" + userList.size(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserAccountListFragment.this.getActivity(), "" + userList.size(), Toast.LENGTH_SHORT).show();
         });
     }
 }

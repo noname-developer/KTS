@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_search"
+        android:layout_width="match_parent"
+        android:foreground="?selectableItemBackgroundBorderless"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="2dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="2dp"
+        app:contentPaddingLeft="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ViewSwitcher
+                android:id="@+id/viewSwitcher_search_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_centerVertical="true">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_search"
+                    app:tint="@color/gray" />
+
+                <ImageView
+                    android:id="@+id/imageView_back_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/ic_back"
+                    app:tint="@color/gray" />
+
+            </ViewSwitcher>
+
+
+            <ViewSwitcher
+                android:id="@+id/viewSwitcher_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16sp"
+                android:layout_toEndOf="@+id/viewSwitcher_search_icon">
+
+                <TextView
+                    android:id="@+id/textView_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:hint="Поиск"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_search"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:hint="Поиск"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textCapSentences" />
+            </ViewSwitcher>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -3,14 +3,19 @@ package com.example.kts.data.repository;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.HomeworkDao;
 import com.example.kts.data.dao.LessonDao;
-import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
+import com.example.kts.data.model.domain.Lesson;
 import com.example.kts.data.model.firestore.LessonsDoc;
+import com.example.kts.data.model.mappers.LessonMapper;
+import com.example.kts.data.model.mappers.LessonMapperImpl;
+import com.example.kts.data.model.sqlite.LessonEntity;
+import com.example.kts.data.model.sqlite.LessonHomeworkSubjectEntities;
 import com.example.kts.data.prefs.AppPreferences;
 import com.example.kts.data.prefs.GroupPreference;
 import com.example.kts.utils.DateFormatUtil;
@@ -45,6 +50,7 @@ public class LessonRepository {
     private final AppPreferences appPreferences;
     private final FirebaseFirestore db;
     private final Map<String, ListenerRegistration> registrationMap = new HashMap<>();
+    private final LessonMapper lessonMapper;
     private CollectionReference lessonsRef;
 
     public LessonRepository(Application application) {
@@ -60,6 +66,7 @@ public class LessonRepository {
         }
         lessonDao = dataBase.lessonDao();
         homeworkDao = dataBase.homeworkDao();
+        lessonMapper = new LessonMapperImpl();
     }
 
     public void insertLesson(LessonEntity lessonEntity) {
@@ -76,7 +83,7 @@ public class LessonRepository {
     private Map<String, Object> convertObjToMap(@NotNull LessonEntity lessonEntity) {
         Map<String, Object> hashLesson = new HashMap<>();
         hashLesson.put(COLUMN_UUID, lessonEntity.getUuid());
-        hashLesson.put(COLUMN_TIMESTAMP, new Date(lessonEntity.getTimestamp()));
+        hashLesson.put(COLUMN_TIMESTAMP, lessonEntity.getTimestamp());
         hashLesson.put(COLUMN_ORDER, lessonEntity.getOrder());
         hashLesson.put(COLUMN_DATE, lessonEntity.getDate());
         hashLesson.put(COLUMN_SUBJECT_UUID, lessonEntity.getSubjectUuid());
@@ -84,11 +91,16 @@ public class LessonRepository {
         return hashLesson;
     }
 
-    public LiveData<List<LessonHomeworkSubjectEntities>> getLessonWithHomeWorkWithSubjectByDate(String date) {
+    public LiveData<List<Lesson>> getLessonWithHomeWorkWithSubjectByDate(String date) {
         if (!registrationMap.containsKey(date)) {
             registrationMap.put(date, getLessonsByDateListener(date));
         }
-        return lessonDao.getLessonWithHomeWorkWithSubjectByDate(date);
+        return Transformations.map(lessonDao.getLessonWithHomeWorkWithSubjectByDate(date), new Function<List<LessonHomeworkSubjectEntities>, List<Lesson>>() {
+            @Override
+            public List<Lesson> apply(List<LessonHomeworkSubjectEntities> entity) {
+                return lessonMapper.entityToDomain(entity);
+            }
+        });
     }
 
     public void getLessonLol() {
@@ -115,7 +127,7 @@ public class LessonRepository {
                         for (LessonEntity lessonEntity : lessonsDoc.getLessons()) {
                             LessonEntity localLessonEntity = lessonDao.getByUuid(lessonEntity.getUuid());
                             if (localLessonEntity != null) {
-                                if (localLessonEntity.getTimestamp() < lessonEntity.getTimestamp()) {
+                                if (localLessonEntity.getTimestamp().before(lessonEntity.getTimestamp())) {
                                     lessonDao.update(lessonEntity);
                                     lessonsDoc.getHomework().stream()
                                             .filter(homework1 -> homework1.getUuid().equals(lessonEntity.getHomeworkUuid()))
@@ -148,7 +160,7 @@ public class LessonRepository {
 
     public Completable loadLessonsByTeacherUserUuidAndStartDate(String teacherUserUuid, Date startDate) {
         return Completable.create(emitter -> db.collectionGroup("Lessons")
-                .whereArrayContains("teacherUsersUuid", teacherUserUuid)
+                .whereArrayContains("teachersUuid", teacherUserUuid)
                 .whereGreaterThanOrEqualTo("date", startDate)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -195,5 +207,5 @@ public class LessonRepository {
                 .get()
                 .addOnSuccessListener(snapshots -> emitter.onSuccess(snapshots.getDocuments().get(0).toObject(LessonsDoc.class)))
                 .addOnFailureListener(emitter::onError));
-}
+    }
 }

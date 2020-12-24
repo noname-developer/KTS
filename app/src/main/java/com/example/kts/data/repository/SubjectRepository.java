@@ -1,12 +1,13 @@
 package com.example.kts.data.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.SubjectDao;
-import com.example.kts.data.model.entity.Subject;
+import com.example.kts.data.model.sqlite.Subject;
 import com.example.kts.data.prefs.GroupPreference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,11 +42,11 @@ public class SubjectRepository {
                 .addOnFailureListener(emitter::onError));
     }
 
-    public LiveData<List<Subject>> getAllSubjects() {
+    public LiveData<List<Subject>> getAll() {
         return subjectDao.getAllSubjects();
     }
 
-    public void insertSubject(Subject subject) {
+    public void insert(Subject subject) {
         subjectDao.insert(subject);
     }
 
@@ -53,10 +54,24 @@ public class SubjectRepository {
         return subjectDao.getDefaultSubjects();
     }
 
-    public Observable<List<Subject>> getSubjectsByTypedName(String subjectName) {
-        return Observable.create(emitter -> subjectsRef.whereArrayContains("search", subjectName)
+    public Observable<List<Subject>> getByTypedName(String subjectName) {
+        return Observable.create(emitter -> subjectsRef.whereArrayContains("searchKeys", subjectName.toLowerCase())
                 .get()
                 .addOnSuccessListener(snapshots -> emitter.onNext(snapshots.toObjects(Subject.class)))
                 .addOnFailureListener(emitter::onError));
+    }
+
+    public Subject getByUuid(String subjectUuid) {
+        if (subjectDao.getByUuid(subjectUuid) == null) {
+            subjectsRef.whereEqualTo("uuid", subjectUuid)
+                    .get()
+                    .addOnSuccessListener(snapshot -> subjectDao.insert(snapshot.getDocuments().get(0).toObject(Subject.class)))
+                    .addOnFailureListener(e -> Log.d("lol", "onFailure: ",e));
+        }
+        return subjectDao.getByUuid(subjectUuid);
+    }
+
+    public void loadSubject(Subject subject) {
+        subjectDao.upsert(subject);
     }
 }

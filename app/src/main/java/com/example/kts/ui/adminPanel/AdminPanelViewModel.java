@@ -8,29 +8,33 @@ import com.example.kts.data.model.domain.ListItem;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.kts.ui.adapters.BaseViewHolder.TYPE_HEADER;
+
 public class AdminPanelViewModel extends ViewModel {
 
-    SingleLiveData<?> openTimetableEditorFragment = new SingleLiveData<>();
+    SingleLiveData<?> openTimetableEditor = new SingleLiveData<>();
     SingleLiveData<?> openChoiceOfGroupFragment = new SingleLiveData<>();
-    SingleLiveData<?> openTeachersFragment = new SingleLiveData<>();
+    SingleLiveData<?> openUserFinder = new SingleLiveData<>();
 
     public List<ListItem> getItemList() {
-        return Arrays.asList(
-                new ListItem("", "Расписание уроков"),
-                new ListItem("", "Группы"),
-                new ListItem("", "Преподаватели")
+        List<ListItem> listItems = Arrays.asList(
+                new ListItem("", "ic_search", "Найти что угодно"),
+                new ListItem("", "ic_plus", "Добавить"),
+                new ListItem("", "ic_book", "Уроки")
         );
+        return listItems;
     }
 
     public void onItemClick(int position) {
         switch (position) {
             case 0:
-                openTimetableEditorFragment.call();
+                openUserFinder.call();
                 break;
             case 1:
                 openChoiceOfGroupFragment.call();
                 break;
             case 2:
+                openTimetableEditor.call();
                 break;
         }
     }

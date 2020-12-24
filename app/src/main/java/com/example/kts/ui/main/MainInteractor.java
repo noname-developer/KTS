@@ -2,7 +2,7 @@ package com.example.kts.ui.main;
 
 import android.app.Application;
 
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.example.kts.data.prefs.TimestampPreference;
 import com.example.kts.data.repository.GroupInfoRepository;
 import com.example.kts.data.repository.GroupRepository;
@@ -23,15 +23,15 @@ public class MainInteractor {
         groupRepository = new GroupRepository(application);
         userRepository = new UserRepository(application);
         timestampPreference = new TimestampPreference(application);
-        User user = userRepository.getUser();
+        UserEntity userEntity = userRepository.getUserPreference();
 
-        if (user.isTeacher()) {
+        if (userEntity.isTeacher()) {
 //            if (groupsWereUpdateLongAgo())
-                groupInfoRepository.getUpdatedGroupsByTeacherAndTimestamp(user, timestampPreference.getTimestampGroups());
+                groupInfoRepository.getUpdatedGroupsByTeacherAndTimestamp(userEntity, timestampPreference.getTimestampGroups());
         }
-        if (user.isStudent() || user.isCurator() && !groupInfoRepository.isGroupHasSuchTeacher(user.getUuid(), user.getGroupUuid())) {
+        if (userEntity.isStudent() || userEntity.isCurator() && !groupInfoRepository.isGroupHasSuchTeacher(userEntity.getUuid(), userEntity.getGroupUuid())) {
 //            if (groupsWereUpdateLongAgo())
-                groupInfoRepository.getUpdatedGroupByUuidAndTimestamp(groupRepository.getGroupUuid(), timestampPreference.getTimestampGroups());
+                groupInfoRepository.getUpdatedGroupByUuidAndTimestamp(groupRepository.getYourGroupUuid(), timestampPreference.getTimestampGroups());
         }
     }
 

@@ -1,13 +1,20 @@
 package com.example.kts.data.model.domain;
 
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.Homework;
-import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.User;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
+import com.example.kts.data.model.DomainModel;
+import com.example.kts.data.model.sqlite.DateConverter;
+import com.example.kts.data.model.sqlite.Homework;
+import com.example.kts.data.model.EntityModel;
+import com.example.kts.data.model.sqlite.Subject;
+import com.example.kts.data.model.sqlite.UserEntity;
+
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
-public class Lesson {
+public class Lesson extends DomainModel implements EntityModel {
 
     private String uuid;
     private String date;
@@ -15,15 +22,28 @@ public class Lesson {
     private Subject subject;
     private Homework homework;
     private int order;
-    private GroupEntity groupEntity;
-    private List<User> teacherUsers;
+    @TypeConverters({DateConverter.class})
+    private Date timestamp;
 
-    public Lesson(String room, Subject subject, int order, List<User> teacherUsers, String date) {
-        this.room = room;
+    public Lesson(String uuid, String room, Subject subject, Homework homework, int order, String date) {
+        this.uuid = uuid;
         this.subject = subject;
+        this.homework = homework;
         this.order = order;
-        this.teacherUsers = teacherUsers;
         this.date = date;
+        this.room = room;
+    }
+
+    public Lesson(String room, Subject subject, int order, List<UserEntity> teachers, String date) {
+        this.uuid = UUID.randomUUID().toString();
+        this.subject = subject;
+        this.homework = homework;
+        this.order = order;
+        this.date = date;
+        this.room = room;
+    }
+
+    public Lesson() {
     }
 
     public String getDate() {
@@ -58,14 +78,6 @@ public class Lesson {
         this.homework = homework;
     }
 
-    public GroupEntity getGroupEntity() {
-        return groupEntity;
-    }
-
-    public void setGroupEntity(GroupEntity groupEntity) {
-        this.groupEntity = groupEntity;
-    }
-
     public int getOrder() {
         return order;
     }
@@ -74,11 +86,21 @@ public class Lesson {
         this.order = order;
     }
 
-    public List<User> getTeacherUsers() {
-        return teacherUsers;
+    public Date getTimestamp() {
+        return timestamp;
     }
 
-    public void setTeacherUsers(List<User> teacherUsers) {
-        this.teacherUsers = teacherUsers;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

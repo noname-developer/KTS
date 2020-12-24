@@ -10,8 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 
-import com.example.kts.calendar.model.Week;
-import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
+import com.example.widgets.calendar.model.Week;
+import com.example.kts.data.model.domain.Lesson;
 import com.example.kts.utils.DateFormatUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,7 @@ public class TimetableViewModel extends AndroidViewModel {
     private final SavedStateHandle savedStateHandle;
     private final TimetableInteractor interactor;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    public final LiveData<List<LessonHomeworkSubjectEntities>> allLessonsForDay;
+    public final LiveData<List<Lesson>> allLessonsForDay;
     public final MutableLiveData<String> toolbarName = new MutableLiveData<>();
     public final MutableLiveData<Date> lessonsDate = new MutableLiveData<>();
     public final MutableLiveData<Boolean> calendarShadowVisibility = new MutableLiveData<>(false);

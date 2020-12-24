@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.example.kts.data.FireEvent;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.example.kts.data.repository.AuthRepository;
 import com.example.kts.data.repository.GroupInfoRepository;
 import com.example.kts.data.repository.GroupRepository;
@@ -15,12 +15,12 @@ import com.example.kts.utils.DateFormatUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -46,14 +46,14 @@ public class VerifyPhoneNumberInteractor {
         groupInfoRepository = new GroupInfoRepository(application);
     }
 
-    public Observable<FireEvent<String>> sendUserPhoneNumber(@NotNull User user) {
-        return Observable.create(emitter -> authRepository.sendUserPhoneNumber(user).subscribeOn(Schedulers.io())
+    public Observable<FireEvent<String>> sendUserPhoneNumber(@NotNull UserEntity userEntity) {
+        return Observable.create(emitter -> authRepository.sendUserPhoneNumber(userEntity).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
                     if (event.getStatus().equals(FireEvent.DataStatus.SUCCESSFUL)) {
                         Log.d("lol", "LOADING SUCCESS: ");
                         emitter.onNext(new FireEvent<String>().loading(event.getData()));
-                        loadData(user).subscribeOn(Schedulers.io())
+                        loadData(userEntity).subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
                             Log.d("lol", "SUCCESSFUL SEND RESULTS: ");
                             emitter.onNext(event);
@@ -62,17 +62,17 @@ public class VerifyPhoneNumberInteractor {
                 }));
     }
 
-    private @NonNull Completable loadData(@NotNull User user) {
-        List<Completable> completableList = new ArrayList<>();
-        String groupUuid = user.getGroupUuid();
-        if (user.isTeacher()) {
-            completableList.add(groupInfoRepository.loadSubjectsAndGroupsByTeacher(user));
-            completableList.add(lessonRepository.loadLessonsByTeacherUserUuidAndStartDate(user.getUuid(), getFirstDayOfLastWeek()));
+    private @NonNull Completable loadData(@NotNull UserEntity userEntity) {
+        Set<Completable> completableList = new HashSet<>();
+        String groupUuid = userEntity.getGroupUuid();
+        if (userEntity.isTeacher()) {
+            completableList.add(groupInfoRepository.loadSubjectsAndGroupsByTeacher(userEntity));
+            completableList.add(lessonRepository.loadLessonsByTeacherUserUuidAndStartDate(userEntity.getUuid(), getFirstDayOfLastWeek()));
         }
-        if (user.hasGroup()) {
+        if (userEntity.hasGroup()) {
             completableList.add(groupRepository.loadGroupPreference(groupUuid));
             completableList.add(lessonRepository.loadLessonsInDateRange(getFirstDayOfLastWeek()));
-            if (user.isCurator()) {
+            if (userEntity.isCurator()) {
                 groupInfoRepository.loadGroupInfo(groupUuid);
             }
         }

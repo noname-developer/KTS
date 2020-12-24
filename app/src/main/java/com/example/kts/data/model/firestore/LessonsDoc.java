@@ -1,7 +1,7 @@
 package com.example.kts.data.model.firestore;
 
-import com.example.kts.data.model.entity.Homework;
-import com.example.kts.data.model.entity.LessonEntity;
+import com.example.kts.data.model.sqlite.Homework;
+import com.example.kts.data.model.sqlite.LessonEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ public class LessonsDoc {
     private List<Homework> homework;
     private List<String> subjectsHavingHomework;
     private List<String> subjectsUuid;
-    private List<String> teacherUsersUuid;
+    private List<String> teachersUuid;
 
     public LessonsDoc() {
     }
@@ -62,11 +62,11 @@ public class LessonsDoc {
         this.subjectsUuid = subjectsUuid;
     }
 
-    public List<String> getTeacherUsersUuid() {
-        return teacherUsersUuid;
+    public List<String> getTeachersUuid() {
+        return teachersUuid;
     }
 
-    public void setTeacherUsersUuid(List<String> teacherUsersUuid) {
-        this.teacherUsersUuid = teacherUsersUuid;
+    public void setTeachersUuid(List<String> teachersUuid) {
+        this.teachersUuid = teachersUuid;
     }
 }

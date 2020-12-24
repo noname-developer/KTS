@@ -9,9 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.kts.data.DataBase;
 import com.example.kts.data.dao.GroupDao;
 import com.example.kts.data.model.domain.GroupInfo;
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.Specialty;
 import com.example.kts.data.model.firestore.GroupDoc;
+import com.example.kts.data.model.mappers.SubjectTeacherMapper;
+import com.example.kts.data.model.mappers.SubjectTeacherMapperImpl;
+import com.example.kts.data.model.sqlite.GroupEntity;
+import com.example.kts.data.model.sqlite.Specialty;
 import com.example.kts.data.prefs.GroupPreference;
 import com.example.kts.data.prefs.TimestampPreference;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,9 +33,11 @@ import io.reactivex.rxjava3.core.Single;
 public class GroupRepository {
 
     private final GroupDao groupDao;
+
     private final CollectionReference groupsRef, specialtiesRef;
     private final GroupPreference groupPreference;
     private final TimestampPreference timestampPreference;
+    private final SubjectTeacherMapper subjectTeacherMapper;
 
     public GroupRepository(Application application) {
         DataBase dataBase = DataBase.getInstance(application);
@@ -43,19 +47,7 @@ public class GroupRepository {
         groupDao = dataBase.groupDao();
         groupPreference = new GroupPreference(application);
         timestampPreference = new TimestampPreference(application);
-    }
-
-    public LiveData<GroupInfo> getGroupInfoByUuid(String groupUuid) {
-        MutableLiveData<GroupInfo> data = new MutableLiveData<>();
-        if (groupDao.getByUuid(groupUuid) != null) {
-            //todo
-        } else {
-
-        }
-        groupsRef.whereEqualTo("uuid", groupUuid)
-                .get()
-                .addOnSuccessListener(snapshots -> data.setValue(snapshots.getDocuments().get(0).toObject(GroupDoc.class).toGroupInfo()));
-        return data;
+        subjectTeacherMapper = new SubjectTeacherMapperImpl();
     }
 
     public LiveData<List<GroupEntity>> getGroupsBySpecialtyUuid(String specialtyUuid) {
@@ -98,7 +90,7 @@ public class GroupRepository {
         }));
     }
 
-    public String getGroupUuid() {
+    public String getYourGroupUuid() {
         return groupPreference.getGroupUuid();
     }
 
@@ -121,7 +113,6 @@ public class GroupRepository {
     }
 
     public String getGroupNameByUuid(String groupUuid) {
-        GroupEntity groupEntity = groupDao.getByUuid(groupUuid);
-        return groupEntity.getName();
+        return groupDao.getNameByUuid(groupUuid);
     }
 }

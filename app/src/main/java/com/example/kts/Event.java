@@ -1,7 +1,5 @@
 package com.example.kts;
 
-import com.example.kts.ui.login.LoginViewModel;
-
 public class Event<E extends Enum<E>, T> {
 
     private final Enum<E> eventType;

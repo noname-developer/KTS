@@ -11,7 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
 import com.example.kts.SingleLiveData;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.DomainModel;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.example.kts.data.repository.GroupInfoRepository;
 import com.example.kts.data.repository.UserRepository;
 
@@ -32,13 +33,13 @@ public class LoginViewModel extends AndroidViewModel {
     public SingleLiveData<Void> finishApp = new SingleLiveData<>();
     public SingleLiveData<FragmentType> addFragment = new SingleLiveData<>();
     public SingleLiveData<?> startMainActivity = new SingleLiveData<>();
-    public LiveData<List<User>> userAccountList;
-    public MutableLiveData<User> selectedUser = new MutableLiveData<>();
+    public LiveData<List<DomainModel>> userAccountList;
+    public MutableLiveData<UserEntity> selectedUser = new MutableLiveData<>();
     public SingleLiveData<String> errorNum = new SingleLiveData<>();
     public MutableLiveData<String> toolbarTitle = new MutableLiveData<>();
     public MutableLiveData<Float> currentProgress = new MutableLiveData<>();
     public MutableLiveData<Boolean> fabVisibility = new MutableLiveData<>();
-    public MutableLiveData<User> verifyUser = new MutableLiveData<>();
+    public MutableLiveData<UserEntity> verifyUser = new MutableLiveData<>();
 
     public LoginViewModel(@NonNull Application application) {
         super(application);
@@ -58,7 +59,7 @@ public class LoginViewModel extends AndroidViewModel {
     public void onTeacherClick() {
         currentProgress.setValue(0.5f);
         toolbarTitle.setValue("Найти себя");
-        userAccountList = userRepository.getTeacherUsers();
+        userAccountList = userRepository.getTeachers();
         addFragment.setValue(FragmentType.CHOICE_USER_ACCOUNT);
         fragmentTypeList.add(FragmentType.CHOICE_USER_ACCOUNT);
         fabVisibility.setValue(true);
@@ -81,13 +82,14 @@ public class LoginViewModel extends AndroidViewModel {
         fragmentTypeList.add(FragmentType.CHOICE_USER_ACCOUNT);
     }
 
-    public void onUserItemClick(User user) {
-        userRepository.loadUserPreference(user);
+    public void onUserItemClick(int position) {
+        UserEntity userEntity = (UserEntity) userAccountList.getValue().get(position);
+        userRepository.loadUserPreference(userEntity);
         currentProgress.setValue(0.65f);
         toolbarTitle.setValue("Авторизация");
         addFragment.setValue(FragmentType.NUM_PHONE);
         fragmentTypeList.add(FragmentType.NUM_PHONE);
-        selectedUser.setValue(user);
+        selectedUser.setValue(userEntity);
     }
 
     public void onCodeClick(@NotNull String phoneNum) {

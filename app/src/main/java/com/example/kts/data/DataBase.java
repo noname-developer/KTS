@@ -13,20 +13,20 @@ import com.example.kts.data.dao.HomeworkDao;
 import com.example.kts.data.dao.LessonDao;
 import com.example.kts.data.dao.SpecialtyDao;
 import com.example.kts.data.dao.SubjectDao;
-import com.example.kts.data.dao.GroupTeacherSubjectDao;
+import com.example.kts.data.dao.GroupSubjectTeacherDao;
 import com.example.kts.data.dao.UserDao;
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.GroupSubjectTeacherCrossRef;
-import com.example.kts.data.model.entity.Homework;
-import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.Specialty;
-import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.GroupEntity;
+import com.example.kts.data.model.sqlite.GroupSubjectTeacherCrossRef;
+import com.example.kts.data.model.sqlite.Homework;
+import com.example.kts.data.model.sqlite.LessonEntity;
+import com.example.kts.data.model.sqlite.Specialty;
+import com.example.kts.data.model.sqlite.Subject;
+import com.example.kts.data.model.sqlite.UserEntity;
 
 @Database(entities = {Subject.class,
         LessonEntity.class,
         Homework.class,
-        User.class,
+        UserEntity.class,
         GroupEntity.class,
         Specialty.class,
         GroupSubjectTeacherCrossRef.class},
@@ -76,7 +76,7 @@ public abstract class DataBase extends RoomDatabase {
 
     public abstract GroupDao groupDao();
 
-    public abstract GroupTeacherSubjectDao teacherSubjectDao();
+    public abstract GroupSubjectTeacherDao groupTeacherSubjectDao();
 
     public abstract SpecialtyDao specialtyDao();
 }

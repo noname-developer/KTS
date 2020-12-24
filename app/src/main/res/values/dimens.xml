@@ -6,4 +6,5 @@
     <item name="medium_text" type="dimen">16sp</item>
     <item name="large_text" type="dimen">20sp</item>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

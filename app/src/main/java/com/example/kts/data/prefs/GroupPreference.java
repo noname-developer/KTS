@@ -2,7 +2,7 @@ package com.example.kts.data.prefs;
 
 import android.app.Application;
 
-import com.example.kts.data.model.entity.GroupEntity;
+import com.example.kts.data.model.sqlite.GroupEntity;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0f1e0c477d50946a20eb9a4024e8c8f3",
+    "identityHash": "0a02ee4a0a274f5b3aac7d812a3f0690",
     "entities": [
       {
         "tableName": "subjects",
@@ -50,13 +50,13 @@
       },
       {
         "tableName": "lessons",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` INTEGER NOT NULL, `order` INTEGER NOT NULL, `date` TEXT, `room` TEXT, `subjectUuid` TEXT, `homeworkUuid` TEXT, `teacherUserUuidList` TEXT, `groupUuid` TEXT, `lessonUuid` TEXT NOT NULL, `uuid` TEXT, PRIMARY KEY(`lessonUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` INTEGER, `order` INTEGER NOT NULL, `date` TEXT, `room` TEXT, `subjectUuid` TEXT, `homeworkUuid` TEXT, `teacherUserUuidList` TEXT, `groupUuid` TEXT, `lessonUuid` TEXT NOT NULL, PRIMARY KEY(`lessonUuid`))",
         "fields": [
           {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "order",
@@ -105,12 +105,6 @@
             "columnName": "lessonUuid",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -124,7 +118,7 @@
       },
       {
         "tableName": "homework",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`content` TEXT, `timestamp` INTEGER NOT NULL, `imageUrlList` TEXT, `complete` INTEGER NOT NULL, `homeworkUuid` TEXT NOT NULL, `uuid` TEXT, PRIMARY KEY(`homeworkUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`content` TEXT, `timestamp` INTEGER, `imageUrlList` TEXT, `complete` INTEGER NOT NULL, `homeworkUuid` TEXT NOT NULL, PRIMARY KEY(`homeworkUuid`))",
         "fields": [
           {
             "fieldPath": "content",
@@ -136,7 +130,7 @@
             "fieldPath": "timestamp",
             "columnName": "timestamp",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "imageUrlList",
@@ -155,12 +149,6 @@
             "columnName": "homeworkUuid",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -174,7 +162,7 @@
       },
       {
         "tableName": "users",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userUuid` TEXT NOT NULL, `firstName` TEXT, `secondName` TEXT, `userGroupUuid` TEXT, `role` TEXT, `phoneNum` TEXT, `photoUrl` TEXT, `sex` INTEGER NOT NULL, PRIMARY KEY(`userUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userUuid` TEXT NOT NULL, `firstName` TEXT, `secondName` TEXT, `userGroupUuid` TEXT, `role` TEXT, `phoneNum` TEXT, `photoUrl` TEXT, `gender` INTEGER NOT NULL, `admin` INTEGER NOT NULL, `generatedAvatar` INTEGER NOT NULL, `timestamp` INTEGER, `type` INTEGER NOT NULL, PRIMARY KEY(`userUuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -219,8 +207,32 @@
             "notNull": false
           },
           {
-            "fieldPath": "sex",
-            "columnName": "sex",
+            "fieldPath": "gender",
+            "columnName": "gender",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "admin",
+            "columnName": "admin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "generatedAvatar",
+            "columnName": "generatedAvatar",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -236,7 +248,7 @@
       },
       {
         "tableName": "groups",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupUuid` TEXT NOT NULL, `groupName` TEXT, `course` INTEGER NOT NULL, `specialtyUuid` TEXT, `timestamp` TEXT, PRIMARY KEY(`groupUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupUuid` TEXT NOT NULL, `groupName` TEXT, `course` INTEGER NOT NULL, `specialtyUuid` TEXT, `timestamp` INTEGER, PRIMARY KEY(`groupUuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -265,7 +277,7 @@
           {
             "fieldPath": "timestamp",
             "columnName": "timestamp",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -280,19 +292,19 @@
       },
       {
         "tableName": "specialties",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT, `specialtyUuid` TEXT NOT NULL, PRIMARY KEY(`specialtyUuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`specialtyUuid` TEXT NOT NULL, `name` TEXT, PRIMARY KEY(`specialtyUuid`))",
         "fields": [
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": false
-          },
           {
             "fieldPath": "uuid",
             "columnName": "specialtyUuid",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -376,7 +388,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f1e0c477d50946a20eb9a4024e8c8f3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a02ee4a0a274f5b3aac7d812a3f0690')"
     ]
   }
 }

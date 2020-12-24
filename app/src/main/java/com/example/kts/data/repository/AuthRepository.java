@@ -4,7 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.example.kts.data.FireEvent;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +37,7 @@ public class AuthRepository {
     }
 
 
-    public Observable<FireEvent<String>> sendUserPhoneNumber(@NotNull User user) {
+    public Observable<FireEvent<String>> sendUserPhoneNumber(@NotNull UserEntity userEntity) {
         return Observable.create(new ObservableOnSubscribe<FireEvent<String>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<FireEvent<String>> emitter) {

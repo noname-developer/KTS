@@ -2,11 +2,12 @@ package com.example.kts;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class RxBusChoiceOfGroup {
     public static final Object EMPTY = new Object();
     private static RxBusChoiceOfGroup instance;
-    private BehaviorSubject<Object> selectGroupSubject;
+    private PublishSubject<Object> selectGroup;
 
     public static RxBusChoiceOfGroup getInstance() {
         if (instance == null) {
@@ -16,16 +17,16 @@ public class RxBusChoiceOfGroup {
     }
 
     public void postSelectGroupEvent(Object o) {
-        selectGroupSubject.onNext(o);
+        selectGroup.onNext(o);
     }
 
     public Observable<Object> getSelectGroupEvent() {
-        if (selectGroupSubject == null)
-            selectGroupSubject = BehaviorSubject.create();
-        return selectGroupSubject;
+        if (selectGroup == null)
+            selectGroup = PublishSubject.create();
+        return selectGroup;
     }
 
     public void clearEvent() {
-        selectGroupSubject = null;
+        selectGroup = null;
     }
 }

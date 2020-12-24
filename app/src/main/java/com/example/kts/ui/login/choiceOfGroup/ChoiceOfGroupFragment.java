@@ -9,14 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kts.R;
-import com.example.kts.data.model.entity.GroupEntity;
 import com.example.kts.ui.adapters.GroupAdapter;
-import com.example.kts.utils.diffutils.GroupAndSpecialtyDiffUtilCallback;
 
 import java.util.ArrayList;
 
@@ -37,7 +34,7 @@ public class ChoiceOfGroupFragment extends Fragment {
 
         adapter.setSpecialtyItemClickListener(position -> viewModel.onSpecialtyItemClick(position));
 
-        adapter.setGroupItemClickListener(position -> viewModel.onGroupItemClick(((GroupEntity) adapter.getData().get(position)).getUuid()));
+        adapter.setGroupItemClickListener(position -> viewModel.onGroupItemClick(position));
 
         return root;
     }
@@ -46,12 +43,7 @@ public class ChoiceOfGroupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ChoiceOfGroupSharedViewModel.class);
-        viewModel.groupAndSpecialtyList.observe(getViewLifecycleOwner(), list -> {
-            GroupAndSpecialtyDiffUtilCallback diffUtilCallback = new GroupAndSpecialtyDiffUtilCallback(adapter.getData(), list);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-            adapter.setData(new ArrayList<>(list));
-            diffResult.dispatchUpdatesTo(adapter);
-        });
+        viewModel.groupAndSpecialtyList.observe(getViewLifecycleOwner(), list -> adapter.submitList(new ArrayList<>(list)));
     }
 
     @Override

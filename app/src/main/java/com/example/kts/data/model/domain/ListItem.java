@@ -1,28 +1,65 @@
 package com.example.kts.data.model.domain;
 
-public class ListItem {
+import com.example.kts.data.model.DomainModel;
 
-    private String iconName;
-    private String content;
+public class ListItem extends DomainModel {
 
-    public ListItem(String iconName, String content) {
-        this.iconName = iconName;
+    private final String icon;
+    private final String content;
+    private final String uuid;
+    private boolean enabled = true;
+    private int type;
+
+    public ListItem(String uuid, String icon, String content) {
+        this.uuid = uuid;
+        this.icon = icon;
         this.content = content;
     }
 
-    public String getIconName() {
-        return iconName;
+    public ListItem(String uuid, String content) {
+        this.uuid = uuid;
+        this.icon = null;
+        this.content = content;
     }
 
-    public void setIconName(String iconName) {
-        this.iconName = iconName;
+    public ListItem(String content) {
+        this.content = content;
+        this.icon = null;
+        uuid = "";
     }
+
+    public String getIcon() {
+        return icon;
+    }
+
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        //Nothing
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

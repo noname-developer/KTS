@@ -1,7 +1,6 @@
 package com.example.kts.ui.main;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -9,11 +8,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavArgument;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -21,7 +17,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.kts.CenteredTitleToolbar;
 import com.example.kts.R;
-import com.example.kts.ui.login.choiceOfGroup.ChoiceOfGroupSharedViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -67,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnScrollListener 
         });
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-                viewModel.onDestinationChanged(destination.getId());
+            viewModel.onDestinationChanged(destination.getId());
         });
 
         viewModel.appbarExpand.observe(this, expanded -> {

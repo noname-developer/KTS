@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search_root"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="4dp"
+        android:foreground="?selectableItemBackgroundBorderless"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="2dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/MaterialToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_menu"
+            android:background="@android:color/transparent"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetRight="0dp"
+            android:insetLeft="0dp"
+            app:contentInsetStartWithNavigation="0dp">
+
+            <ViewSwitcher
+                android:id="@+id/viewSwitcher_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center_vertical"
+                    android:hint="Поиск"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center_vertical"
+                    android:hint="Поиск"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textCapSentences" />
+            </ViewSwitcher>
+        </androidx.appcompat.widget.Toolbar>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

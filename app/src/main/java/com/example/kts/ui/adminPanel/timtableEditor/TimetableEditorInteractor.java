@@ -6,11 +6,11 @@ import android.util.Log;
 import com.example.kts.data.TimetableDocumentParser;
 import com.example.kts.data.model.domain.GroupWeekLessons;
 import com.example.kts.data.model.domain.Lesson;
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.Homework;
-import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.sqlite.GroupEntity;
+import com.example.kts.data.model.sqlite.Homework;
+import com.example.kts.data.model.sqlite.LessonEntity;
+import com.example.kts.data.model.sqlite.Subject;
+import com.example.kts.data.model.sqlite.UserEntity;
 import com.example.kts.data.model.firestore.GroupDoc;
 import com.example.kts.data.model.firestore.LessonsDoc;
 import com.example.kts.data.repository.GroupRepository;
@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -59,19 +60,19 @@ public class TimetableEditorInteractor {
                         new Subject("23bn756n", "КДО", null, null)
                 );
 
-                List<User> teacherUsers = Arrays.asList(
-                        new User("Сергей", "Котов", "", User.TEACHER, null, null, 2),
-                        new User("Сергей", "Горбунов", "", User.TEACHER, null, null, 2),
-                        new User("Денис", "Николенко", "", User.TEACHER, null, null, 2),
-                        new User("Мария", "Валерьевна", "", User.TEACHER, null, null, 1),
-                        new User("Татьяна", "Домашева", "", User.TEACHER, null, null, 2),
-                        new User("Нина", "Владимировна", "", User.TEACHER, null, null, 2),
-                        new User("Другой препод", "по ин. язу", "", User.TEACHER, null, null, 2),
-                        new User("Ирина", "Кретова", "", User.TEACHER, null, null, 2)
+                List<UserEntity> teachers = Arrays.asList(
+                        new UserEntity("Сергей", "Котов", "", UserEntity.TEACHER, null, null, 2, false),
+                        new UserEntity("Сергей", "Горбунов", "", UserEntity.TEACHER, null, null, 2, false),
+                        new UserEntity("Денис", "Николенко", "", UserEntity.TEACHER, null, null, 2, false),
+                        new UserEntity("Мария", "Валерьевна", "", UserEntity.TEACHER, null, null, 1, false),
+                        new UserEntity("Татьяна", "Домашева", "", UserEntity.TEACHER, null, null, 2, false),
+                        new UserEntity("Нина", "Владимировна", "", UserEntity.TEACHER, null, null, 2, false),
+                        new UserEntity("Другой препод", "по ин. язу", "", UserEntity.TEACHER, null, null, 2, false),
+                        new UserEntity("Ирина", "Кретова", "", UserEntity.TEACHER, null, null, 2, false)
                 );
 
                 List<GroupDoc> groupDocList = Arrays.asList(
-                        new GroupDoc("ПКС–2.2", 2, subjects, teacherUsers));
+                        new GroupDoc("ПКС–2.2", 2, subjects, teachers));
 
                 documentParser.parseDoc(docFile, groupDocList)
                         .subscribe((groupWeekLessons, throwable) -> {
@@ -96,11 +97,11 @@ public class TimetableEditorInteractor {
                     GroupEntity groupEntity = groupWeekLessons.getGroupEntity();
 
                     List<LessonEntity> futureLessons = Arrays.asList(
-                            new LessonEntity("dfgdfg", 0, 1,
+                            new LessonEntity("dfgdfg", new Date(), 1,
                                     "02-10-20", "432v5", ""),
-                            new LessonEntity("g34", 0, 3,
+                            new LessonEntity("g34",  new Date(), 3,
                                     "01-10-20", "23bn756n", ""),
-                            new LessonEntity("dsfdfgh", 0, 3,
+                            new LessonEntity("dsfdfgh",  new Date(), 3,
                                     "30-09-20", "n7876", "")
                     );
                     List<Homework> futureHomework = Arrays.asList(
@@ -121,14 +122,12 @@ public class TimetableEditorInteractor {
                 for (LessonEntity futureLessons : lessonsDoc.getLessons()) {
                     int i = lessonsDoc.getLessons().indexOf(futureLessons);
                     String subjectUuid = lessonsDoc.getLessons().get(i).getSubjectUuid();
-                    Lesson lesson1 = groupWeekLessons.getWeekLessons().stream()
+                    Lesson lesson1 = groupWeekLessons.getWeekLessonOfGroups().stream()
                             .filter(lesson -> lesson.getSubject() != null && subjectUuid.equals(lesson.getSubject().getUuid())
                             )
                             .findFirst()
                             .orElse(null);
                     lesson1.setHomework(lessonsDoc.getHomework().get(i));
-                    int i1 = groupWeekLessons.getWeekLessons().indexOf(lesson1);
-                    Log.d("lol", ": ");
                 }
             }
         });

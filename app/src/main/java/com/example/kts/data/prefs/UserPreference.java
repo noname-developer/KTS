@@ -11,8 +11,9 @@ public class UserPreference extends BaseSharedPreference {
     public static final String ROLE = "ROLE";
     public static final String PHOTO_URL = "PHOTO_URL";
     public static final String PHONE_NUM = "PHONE_NUM";
-    public static final String SEX = "SEX";
+    public static final String GENDER = "GENDER";
     public static final String UUID = "UUID";
+    public static final String ADMIN = "ADMIN";
 
     public UserPreference(@NotNull Application application) {
         super(application, "User");
@@ -34,12 +35,12 @@ public class UserPreference extends BaseSharedPreference {
         setValue(USER_SECOND_NAME, secondName);
     }
 
-    public int getSex() {
-        return getValue(SEX, 0);
+    public int getGender() {
+        return getValue(GENDER, 0);
     }
 
-    public void setSex(int sex) {
-        setValue(SEX, sex);
+    public void setGender(int gender) {
+        setValue(GENDER, gender);
     }
 
     public String getRole() {
@@ -72,5 +73,13 @@ public class UserPreference extends BaseSharedPreference {
 
     public void setUuid(String uuid) {
         setValue(UUID, uuid);
+    }
+
+    public boolean isAdmin() {
+        return getValue(ADMIN, false);
+    }
+
+    public void setAdmin(boolean admin) {
+        setValue(ADMIN, admin);
     }
 }

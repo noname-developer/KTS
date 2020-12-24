@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="96dp"
+    android:layout_height="84dp"
     android:padding="16dp">
 
     <ImageView
@@ -14,7 +15,7 @@
         android:scaleType="centerCrop" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_marginStart="16sp"
@@ -26,16 +27,30 @@
             android:id="@+id/textView_subject_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/gilroy_medium"
+            android:fontFamily="@font/gilroy_semibold"
             android:text="Название предмета"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textView_teacher_fullName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/gilroy_semibold"
-            android:text="Преподаватель"
-            android:textSize="14sp" />
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.example.kts.CircleImageView
+                android:id="@+id/imageView_teacher_avatar"
+                android:layout_width="26dp"
+                android:layout_height="26dp"/>
+
+            <TextView
+                android:id="@+id/textView_teacher_fullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/gilroy_semibold"
+                android:text="Преподаватель"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

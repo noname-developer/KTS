@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Query;
 
-import com.example.kts.data.model.entity.Subject;
+import com.example.kts.data.model.sqlite.Subject;
 
 import java.util.List;
 
@@ -22,4 +22,7 @@ public abstract class SubjectDao extends BaseDao<Subject> {
 
     @Query("DELETE FROM subjects WHERE def = '0' AND subjectUuid NOT IN(:availableSubjects)")
     public abstract void deleteMissingByGroupUuid(String availableSubjects);
+
+    @Query("SELECT * FROM subjects WHERE subjectUuid =:subjectUuid")
+    public abstract Subject getByUuid(String subjectUuid);
 }

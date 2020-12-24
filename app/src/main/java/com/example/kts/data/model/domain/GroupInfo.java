@@ -1,21 +1,15 @@
 package com.example.kts.data.model.domain;
 
-import com.example.kts.data.model.entity.Specialty;
-import com.example.kts.data.model.entity.Subject;
-import com.example.kts.data.model.entity.User;
+import com.example.kts.data.model.DomainModel;
+import com.example.kts.data.model.sqlite.Specialty;
+import com.example.kts.data.model.sqlite.Subject;
+import com.example.kts.data.model.sqlite.UserEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.ObservableSource;
 
 public class GroupInfo {
 
@@ -60,8 +54,8 @@ public class GroupInfo {
         this.subjectTeacherList = subjectTeacherList;
     }
 
-    public void addSubjectTeacher(Subject subject, User teacher) {
-        subjectTeacherList.add(new SubjectTeacher(subject, teacher));
+    public void addSubjectTeacher(Subject subject, UserEntity teacher, String groupUuid) {
+        subjectTeacherList.add(new SubjectTeacher(groupUuid, subject, teacher));
     }
 
     public String getUuid() {
@@ -90,23 +84,25 @@ public class GroupInfo {
         map.put("specialtyUuid", specialty.getUuid());
         map.put("course", course);
         List<Subject> subjects = new ArrayList<>();
-        List<User> teacherUsers = new ArrayList<>();
+        List<UserEntity> teachers = new ArrayList<>();
         subjectTeacherList.forEach(subjectTeacher -> {
             subjects.add(subjectTeacher.getSubject());
-            teacherUsers.add(subjectTeacher.getTeacher());
+            teachers.add(subjectTeacher.getTeacher());
         });
         map.put("subjects", subjects);
-        map.put("teacherUsers", teacherUsers);
+        map.put("teachers", teachers);
         map.put("specialty", specialty);
         map.put("timestamp", new Date());
         return map;
     }
 
-    public static class SubjectTeacher {
+    public static class SubjectTeacher extends DomainModel {
+        private String groupUuid;
         private Subject subject;
-        private User teacher;
+        private UserEntity teacher;
 
-        public SubjectTeacher(Subject subject, User teacher) {
+        public SubjectTeacher(String groupUuid, Subject subject, UserEntity teacher) {
+            this.groupUuid = groupUuid;
             this.subject = subject;
             this.teacher = teacher;
         }
@@ -119,12 +115,31 @@ public class GroupInfo {
             this.subject = subject;
         }
 
-        public User getTeacher() {
+        public UserEntity getTeacher() {
             return teacher;
         }
 
-        public void setTeacher(User teacher) {
+        public void setTeacher(UserEntity teacher) {
             this.teacher = teacher;
+        }
+
+        public String getGroupUuid() {
+            return groupUuid;
+        }
+
+        public void setGroupUuid(String groupUuid) {
+            this.groupUuid = groupUuid;
+        }
+
+        @Override
+        public String getUuid() {
+            //nothing
+            return null;
+        }
+
+        @Override
+        public void setUuid(String uuid) {
+            //nothing
         }
     }
 }

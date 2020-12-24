@@ -5,8 +5,8 @@ import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
+import com.example.kts.data.model.sqlite.LessonEntity;
+import com.example.kts.data.model.sqlite.LessonHomeworkSubjectEntities;
 
 import java.util.List;
 

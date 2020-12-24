@@ -6,4 +6,9 @@
         android:title="Сегодня"
         app:iconTint="@null"
         android:icon="@drawable/ic_cal_today"/>
+    <item android:id="@+id/d"
+        app:showAsAction="withText"
+        android:title="Сегодня"
+        app:iconTint="@null"
+        android:icon="@drawable/ic_cal_today"/>
 </menu>

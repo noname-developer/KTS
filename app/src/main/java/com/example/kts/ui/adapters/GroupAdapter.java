@@ -1,5 +1,6 @@
 package com.example.kts.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,24 +8,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.kts.R;
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.Specialty;
+import com.example.kts.data.model.EntityModel;
+import com.example.kts.data.model.sqlite.GroupEntity;
+import com.example.kts.data.model.sqlite.Specialty;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class GroupAdapter extends ListAdapter<EntityModel, BaseViewHolder<EntityModel>> {
 
     public static final int TYPE_GROUP = 1;
     public static final int TYPE_SPECIALTY = 2;
-    private List<Object> itemsList = new ArrayList<>();
+    private static final DiffUtil.ItemCallback<EntityModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<EntityModel>() {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull EntityModel oldItem, @NonNull EntityModel newItem) {
+            return oldItem.getUuid().equals(newItem.getUuid());
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        @Override
+        public boolean areContentsTheSame(@NonNull EntityModel oldItem, @NonNull EntityModel newItem) {
+            return oldItem == newItem;
+        }
+    };
     private OnItemClickListener specialtyItemClickListener;
     private OnItemClickListener groupItemClickListener;
+
+    public GroupAdapter() {
+        super(DIFF_CALLBACK);
+    }
 
     public void setSpecialtyItemClickListener(OnItemClickListener specialtyItemClickListener) {
         this.specialtyItemClickListener = specialtyItemClickListener;
@@ -34,21 +50,13 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.groupItemClickListener = groupItemClickListener;
     }
 
-    public List<Object> getData() {
-        return itemsList;
-    }
-
-    public void setData(List<Object> itemsList) {
-        this.itemsList = itemsList;
-    }
-
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         switch (viewType) {
             case TYPE_GROUP:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_content, parent, false);
                 return new GroupAdapter.GroupHolder(view);
             case TYPE_SPECIALTY:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_specialty, parent, false);
@@ -60,7 +68,7 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        Object o = itemsList.get(position);
+        EntityModel o = getItem(position);
         if (o instanceof GroupEntity) {
             return TYPE_GROUP;
         } else if (o instanceof Specialty) {
@@ -70,23 +78,18 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        holder.onBind(itemsList.get(position));
+    public void onBindViewHolder(@NonNull BaseViewHolder<EntityModel> holder, int position) {
+        holder.onBind(getItem(position));
         switch (getItemViewType(position)) {
             case TYPE_GROUP:
-                holder.setListener(groupItemClickListener);
+                holder.setItemClickListener(groupItemClickListener);
                 break;
             case TYPE_SPECIALTY:
-                holder.setListener(specialtyItemClickListener);
+                holder.setItemClickListener(specialtyItemClickListener);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + getItemViewType(position));
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return itemsList.size();
     }
 
     static class SpecialtyHolder extends BaseViewHolder<Specialty> {
@@ -102,11 +105,11 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         @Override
-        void onBind(Specialty item) {
+        protected void onBind(@NotNull Specialty item) {
             tvName.setText(item.getName());
             itemView.setOnClickListener(view -> {
                 expandArrow(isExpand ? 0 : 180);
-                getListener().onItemClick(getAdapterPosition());
+                getItemClickListener().onItemClick(getAdapterPosition());
                 isExpand = !isExpand;
             });
         }
@@ -126,9 +129,9 @@ public class GroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         @Override
-        void onBind(@NotNull GroupEntity item) {
+        protected void onBind(@NotNull GroupEntity item) {
             tvName.setText((item.getName()));
-            itemView.setOnClickListener(view -> getListener().onItemClick(getAdapterPosition()));
+            itemView.setOnClickListener(view -> getItemClickListener().onItemClick(getAdapterPosition()));
         }
     }
 }

@@ -11,6 +11,11 @@
         android:id="@+id/tabLayout_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/tab_layout_bg"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabIndicatorFullWidth="false"
+        app:tabTextAppearance="@style/AppTheme.Tabs.TextAppearance"
         app:tabMode="fixed" >
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem_group_users"

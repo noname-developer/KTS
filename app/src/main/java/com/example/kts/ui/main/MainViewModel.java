@@ -15,9 +15,6 @@ import java.util.Date;
 
 public class MainViewModel extends AndroidViewModel {
 
-    private final static int FRAGMENT_TIMETABLE = 2131296516,
-            FRAGMENT_HOME = 2131296513,
-            FRAGMENT_GROUP = 2131296512;
     public MutableLiveData<Boolean> appbarExpand = new MutableLiveData<>(true);
     public MutableLiveData<Boolean> appbarShadowVisibility = new MutableLiveData<>(false);
     public MutableLiveData<Integer> appBarFlags = new MutableLiveData<>();
@@ -51,13 +48,15 @@ public class MainViewModel extends AndroidViewModel {
 
     public void onDestinationChanged(int itemId) {
         switch (itemId) {
-            case FRAGMENT_TIMETABLE:
+            case R.id.menu_timetable:
                 currentMenuOptions.setValue(R.menu.timtable_options);
                 break;
-            case FRAGMENT_HOME:
+            case R.id.menu_home:
                 currentMenuOptions.setValue(R.menu.home_options);
                 break;
-            case FRAGMENT_GROUP:
+            case R.id.menu_group:
+            case R.id.group_editor:
+                currentMenuOptions.setValue(R.menu.group_options);
                 break;
         }
     }

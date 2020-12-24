@@ -12,24 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kts.R;
-import com.example.kts.calendar.WeekCalendarListener;
-import com.example.kts.calendar.WeekCalendarView;
-import com.example.kts.calendar.model.Week;
-import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
-import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.Subject;
+import com.example.widgets.calendar.WeekCalendarListener;
+import com.example.widgets.calendar.WeekCalendarView;
+import com.example.widgets.calendar.model.Week;
 import com.example.kts.ui.DividerItemDecorator;
-import com.example.kts.ui.adapters.LessonAdapter;
+import com.example.kts.ui.adapters.LessonForGroupAdapter;
 import com.example.kts.ui.main.MainViewModel;
-import com.example.kts.utils.diffutils.LessonDiffUtilCallback;
 import com.google.android.material.appbar.AppBarLayout;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import static com.example.kts.utils.Util.pxToDp;
@@ -37,7 +31,7 @@ import static com.example.kts.utils.Util.pxToDp;
 public class TimetableFragment extends Fragment implements WeekCalendarListener, WeekCalendarListener.OnLoadListener {
 
     private TimetableViewModel viewModel;
-    private LessonAdapter adapter;
+    private LessonForGroupAdapter adapter;
     private WeekCalendarView timetableView;
     private AppBarLayout appBarLayout;
 
@@ -55,7 +49,7 @@ public class TimetableFragment extends Fragment implements WeekCalendarListener,
         timetableView = root.findViewById(R.id.calendar_timetable);
         RecyclerView recyclerView = root.findViewById(R.id.recyclerview_lessons);
 
-        adapter = new LessonAdapter();
+        adapter = new LessonForGroupAdapter(viewModel.getLessonTime());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new DividerItemDecorator(ContextCompat.getDrawable(getActivity(), R.drawable.divider)));
@@ -67,7 +61,7 @@ public class TimetableFragment extends Fragment implements WeekCalendarListener,
                 viewModel.onScroll(recyclerView.canScrollVertically(-1), recyclerView.getHeight() - pxToDp(getActivity(), 26));
             }
         });
-        adapter.setOnLessonItemClickListener(new LessonAdapter.OnLessonItemClickListener() {
+        adapter.setOnLessonItemClickListener(new LessonForGroupAdapter.OnLessonItemClickListener() {
             @Override
             public void onHomeworkChecked(boolean checked) {
                 viewModel.onHomeworkChecked(checked);
@@ -81,74 +75,11 @@ public class TimetableFragment extends Fragment implements WeekCalendarListener,
 
         viewModel.calendarShadowVisibility.observe(getViewLifecycleOwner(), visibility -> appBarLayout.setSelected(visibility));
 
-        viewModel.allLessonsForDay.observe(getViewLifecycleOwner(), lessonAndHomeworkAndSubjects -> {
-            Log.d("lol", "OBSERVE: " + lessonAndHomeworkAndSubjects.size());
-            LessonDiffUtilCallback diffUtilCallback = new LessonDiffUtilCallback(adapter.getData(), lessonAndHomeworkAndSubjects);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-            adapter.setData(lessonAndHomeworkAndSubjects);
+        viewModel.allLessonsForDay.observe(getViewLifecycleOwner(), lessonsOfGroup -> {
+            adapter.submitList(lessonsOfGroup);
 
             //todo для теста
-            adapter.setData(Arrays.asList(
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,-1,"","","")
-                    , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red")),
-                    new LessonHomeworkSubjectEntities(new LessonEntity("",0,0,"","","")
-                            , null, new Subject("", "", "","red"))
-            ));
-
-            adapter.setLessonTime(viewModel.getLessonTime());
-            diffResult.dispatchUpdatesTo(adapter);
+//            adapter.submitList();
         });
         return root;
     }
@@ -170,6 +101,7 @@ public class TimetableFragment extends Fragment implements WeekCalendarListener,
     @Override
     public void onWeekSelect(Week week) {
         viewModel.onWeekSelect(week);
+        Log.d("lol", "onWeekSelect: ");
     }
 
     @Override

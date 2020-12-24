@@ -33,13 +33,16 @@
         android:id="@+id/menu_admin_panel"
         android:name="com.example.kts.ui.adminPanel.AdminPanelFragment"
         android:label="@string/menu_title_control_panel"
-        tools:layout="@layout/item_icon_content">
+        tools:layout="@layout/item_popup_icon_content">
         <action
             android:id="@+id/action_menu_admin_panel_to_timetableEditorFragment"
             app:destination="@id/timetableEditorFragment" />
         <action
             android:id="@+id/action_menu_admin_panel_to_choiceOfGroupFragment"
             app:destination="@id/choiceOfGroupFragment" />
+        <action
+            android:id="@+id/action_menu_admin_panel_to_finderFragment2"
+            app:destination="@id/finderFragment" />
     </fragment>
     <fragment
         android:id="@+id/timetableEditorFragment"
@@ -55,4 +58,9 @@
             android:id="@+id/action_choiceOfGroupFragment_to_group_editor"
             app:destination="@id/group_editor" />
     </fragment>
+    <fragment
+        android:id="@+id/finderFragment"
+        android:name="com.example.kts.ui.finder.FinderFragment"
+        android:label="fragment_finder"
+        tools:layout="@layout/fragment_finder" />
 </navigation>

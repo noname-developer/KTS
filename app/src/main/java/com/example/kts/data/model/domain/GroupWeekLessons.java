@@ -1,17 +1,17 @@
 package com.example.kts.data.model.domain;
 
-import com.example.kts.data.model.entity.GroupEntity;
+import com.example.kts.data.model.sqlite.GroupEntity;
 
 import java.util.List;
 
 public class GroupWeekLessons {
 
     private GroupEntity groupEntity;
-    private List<Lesson> weekLessons;
+    private List<Lesson> weekLessonOfGroups;
 
-    public GroupWeekLessons(GroupEntity groupEntity, List<Lesson> weekLessons) {
+    public GroupWeekLessons(GroupEntity groupEntity, List<Lesson> weekLessonOfGroups) {
         this.groupEntity = groupEntity;
-        this.weekLessons = weekLessons;
+        this.weekLessonOfGroups = weekLessonOfGroups;
     }
 
     public GroupEntity getGroupEntity() {
@@ -22,11 +22,11 @@ public class GroupWeekLessons {
         this.groupEntity = groupEntity;
     }
 
-    public List<Lesson> getWeekLessons() {
-        return weekLessons;
+    public List<Lesson> getWeekLessonOfGroups() {
+        return weekLessonOfGroups;
     }
 
-    public void setWeekLessons(List<Lesson> weekLessons) {
-        this.weekLessons = weekLessons;
+    public void setWeekLessonOfGroups(List<Lesson> weekLessonOfGroups) {
+        this.weekLessonOfGroups = weekLessonOfGroups;
     }
 }

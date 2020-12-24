@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-<!--    <item_group android:id="@+id/option_select_today"-->
-<!--        app:showAsAction="always"-->
-<!--        android:title="Сегодня"-->
-<!--        android:icon="@drawable/ic_cal_today"/>-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/option_select_today"
+        android:title="Сегодня" />
 </menu>

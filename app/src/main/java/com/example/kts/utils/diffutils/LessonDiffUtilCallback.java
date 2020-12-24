@@ -4,10 +4,10 @@ import android.util.Log;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.example.kts.data.model.entity.Homework;
-import com.example.kts.data.model.entity.LessonEntity;
-import com.example.kts.data.model.entity.LessonHomeworkSubjectEntities;
-import com.example.kts.data.model.entity.Subject;
+import com.example.kts.data.model.sqlite.Homework;
+import com.example.kts.data.model.sqlite.LessonEntity;
+import com.example.kts.data.model.sqlite.LessonHomeworkSubjectEntities;
+import com.example.kts.data.model.sqlite.Subject;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

@@ -1,6 +1,7 @@
 package com.example.kts;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.text.TextUtils;
@@ -18,10 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class CenteredTitleToolbar extends Toolbar {
 
+    int sizeText = (int) (getResources().getDimension(R.dimen.large_text) / getResources().getDisplayMetrics().density);
     private TextView textView;
     private int screenWidth;
     private boolean centerTitle = false;
-    int sizeText = (int) (getResources().getDimension(R.dimen.large_text) / getResources().getDisplayMetrics().density);
 
     public CenteredTitleToolbar(Context context) {
         super(context);
@@ -39,8 +40,8 @@ public class CenteredTitleToolbar extends Toolbar {
     }
 
     private void init() {
+        setBackgroundColor(Color.TRANSPARENT);
         screenWidth = getScreenSize().x;
-
         textView = new TextView(getContext());
         textView.setTextSize(sizeText);
         Typeface type = ResourcesCompat.getFont(getContext(), R.font.gilroy_medium);
@@ -58,8 +59,7 @@ public class CenteredTitleToolbar extends Toolbar {
             int[] location = new int[2];
             textView.getLocationOnScreen(location);
             textView.setTranslationX(textView.getTranslationX() + (-location[0] + screenWidth / 2 - textView.getWidth() / 2));
-        }
-        else textView.setTranslationX(0);
+        } else textView.setTranslationX(0);
     }
 
     public int pxToDp(float dpValue) {

@@ -11,10 +11,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.example.kts.RxBusChoiceOfGroup;
-import com.example.kts.data.model.entity.GroupEntity;
-import com.example.kts.data.model.entity.Specialty;
-import com.example.kts.data.repository.GroupRepository;
+import com.example.kts.data.model.EntityModel;
+import com.example.kts.data.model.sqlite.GroupEntity;
+import com.example.kts.data.model.sqlite.Specialty;
 import com.example.kts.data.repository.GroupInfoRepository;
+import com.example.kts.data.repository.GroupRepository;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.example.kts.utils.PredicateUtil.distinctByKey;
 
 public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
 
@@ -33,7 +37,7 @@ public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
     public LiveData<List<Specialty>> allSpecialties;
     public LiveData<List<GroupEntity>> groupsBySpecialty;
     public MutableLiveData<String> selectedSpecialtyUuid = new MutableLiveData<>();
-    public MediatorLiveData<List<Object>> groupAndSpecialtyList = new MediatorLiveData<>();
+    public MediatorLiveData<List<EntityModel>> groupAndSpecialtyList = new MediatorLiveData<>();
 
     public ChoiceOfGroupSharedViewModel(@NonNull Application application) {
         super(application);
@@ -50,15 +54,16 @@ public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
         });
         groupAndSpecialtyList.addSource(groupsBySpecialty, groups -> {
             groupAndSpecialtyList.getValue().addAll(groups);
-            groupAndSpecialtyList.setValue(sortedList(groupAndSpecialtyList.getValue()));
+            groupAndSpecialtyList.setValue(sortedList(groupAndSpecialtyList.getValue().stream()
+                    .filter(distinctByKey(EntityModel::getUuid))
+                    .collect(Collectors.toList())));
         });
     }
 
     @NotNull
     @Contract("_ -> param1")
-    private List<Object> sortedList(@NotNull List<Object> list) {
-        list.sort((o1, o2) ->
-                getSpecialtyUuid(o1).compareTo(getSpecialtyUuid(o2)));
+    private List<EntityModel> sortedList(@NotNull List<EntityModel> list) {
+        list.sort((o1, o2) -> getSpecialtyUuid(o1).compareTo(getSpecialtyUuid(o2)));
         return list;
     }
 
@@ -86,7 +91,8 @@ public class ChoiceOfGroupSharedViewModel extends AndroidViewModel {
         expandableSpecialties.replace(specialtyName, !expandableSpecialties.get(specialtyName));
     }
 
-    public void onGroupItemClick(@NotNull String groupUuid) {
+    public void onGroupItemClick(int position) {
+        String groupUuid = groupAndSpecialtyList.getValue().get(position).getUuid();
         groupInfoRepository.loadGroupInfo(groupUuid);
         RxBusChoiceOfGroup.getInstance().postSelectGroupEvent(groupUuid);
     }

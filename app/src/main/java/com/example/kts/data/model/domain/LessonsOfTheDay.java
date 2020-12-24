@@ -6,11 +6,11 @@ import java.util.List;
 public class LessonsOfTheDay {
 
     Date date;
-    List<Lesson> lessonList;
+    List<LessonOfGroup> lessonOfGroupList;
 
-    public LessonsOfTheDay(Date date, List<Lesson> lessonList) {
+    public LessonsOfTheDay(Date date, List<LessonOfGroup> lessonOfGroupList) {
         this.date = date;
-        this.lessonList = lessonList;
+        this.lessonOfGroupList = lessonOfGroupList;
     }
 
     public Date getDate() {
@@ -21,11 +21,11 @@ public class LessonsOfTheDay {
         this.date = date;
     }
 
-    public List<Lesson> getLessonList() {
-        return lessonList;
+    public List<LessonOfGroup> getLessonOfGroupList() {
+        return lessonOfGroupList;
     }
 
-    public void setLessonList(List<Lesson> lessonList) {
-        this.lessonList = lessonList;
+    public void setLessonOfGroupList(List<LessonOfGroup> lessonOfGroupList) {
+        this.lessonOfGroupList = lessonOfGroupList;
     }
 }

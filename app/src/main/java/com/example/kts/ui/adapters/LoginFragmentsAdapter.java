@@ -55,7 +55,6 @@ public class LoginFragmentsAdapter extends FragmentStateAdapter {
     }
 
 
-
     public void removeFragment(int position) {
         fragmentTypeList.remove(position);
         notifyItemRemoved(position);
